@@ -11,12 +11,13 @@ export default function UsersForm() {
 		<>
 			<StyledUserForm>
 				<div className="upper-text-container">
-					<h1 className="title">Convert between timezones</h1>
+					<h1 className="title">Schedule between timezones</h1>
 				</div>
 				<FormContainer>
 					<UserForm />
+					
 					<div className="form-footer-actions">
-						<button className="cta" title="Start conversion">
+						<button className="cta start" title="Start conversion">
 							START
 						</button>
 						<button className="cta add-user" title="Add new friend">
@@ -31,33 +32,43 @@ export default function UsersForm() {
 
 const FormContainer = styled.div`
 	min-width: 320px;
-	min-height: 328px;
 	background-color: var(--black-pale);
 	border-radius: 10px;
 	display: flex;
 	flex-direction: column;
-	/* justify-content: center; */
 	align-items: center;
 	position: relative;
 	padding: 31px 21px;
 
+	.tagline,
+	.user-container,
+	.user-container input,
+	.cta {
+		box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+	}
+	.close-user svg {
+		filter: drop-shadow(0px 4px 4px rgba(0 0 0 / 0.45));
+	}
+
 	.tagline {
-        background-color: var(--green-strong);
+		background-color: var(--green-strong);
 		position: absolute;
 		top: -15px;
 		padding: 5px 15px;
-		border-radius: 6px; 
+		border-radius: 6px;
 		color: #fafafa;
+		font-weight: 500;
 	}
 	.user-container {
 		display: flex;
 		flex-direction: column;
-		align-items: center;
 		background-color: var(--green-strong);
-		width: 278px;
+		min-width: 90%;
 		min-height: 178px;
 		border-radius: 10px;
 		padding: 39px 27px;
+		margin-bottom: 20px;
+		position: relative;
 	}
 	.user-container input {
 		width: 100%;
@@ -67,6 +78,7 @@ const FormContainer = styled.div`
 		padding: 10px 12px;
 		margin-bottom: 9px;
 		color: var(--white);
+		font-size: 1rem;
 	}
 	.user-container input::placeholder {
 		color: #cecece;
@@ -74,8 +86,50 @@ const FormContainer = styled.div`
 	.user-container input:focus {
 		outline: none;
 	}
-	.add-user {
-		font-size: 1rem;
+	.cta {
+		background-color: var(--black-dark);
+		color: var(--white);
+		border: none;
+		border-radius: var(--border-radius-subtle);
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+		font-size: .9rem;
 	}
-	
+	.cta:hover {
+		background-color: #000;
+	}
+	.form-footer-actions {
+		display: flex;
+		/* min-width: 278px; */
+		min-width: 90%;
+		justify-content: center;
+		position: relative;
+		box-shadow: none;
+	}
+	.cta.start {
+		padding: 10px 25px;
+		margin-right: 10px;
+		font-weight: 700;
+	}
+	.cta.add-user {
+		font-size: 1.5rem;
+		padding: 3px 8px;
+		position: absolute;
+		right: 0;
+	}
+	.cta.add-schedule {
+		padding: 5px 15px;
+		align-self: flex-start;
+		font-weight: 500;
+	}
+	.close-user {
+		position: absolute;
+		cursor: pointer;
+		right: 10px;
+		top: 5px;
+		font-size: 1.4rem;
+		background-color: transparent !important;
+		border: none;
+		color: var(--black-pale);
+	}
 `;

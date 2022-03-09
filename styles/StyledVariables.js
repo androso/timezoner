@@ -21,6 +21,9 @@ const variables = css`
 		--fz-xxl: 24px;
 
         --site-max-width:: 800px;
+
+        --border-radius-subtle: 5px;
+        --border-radius-pill: 9px;
 	}
 `;
 

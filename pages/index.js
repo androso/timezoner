@@ -3,20 +3,19 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import { CustomizeMenu } from '../styles'
 import Select from "react-select";
-import { HeadData, TableTimezone, UserForm } from '../components';
+import { HeadData, TableTimezone, UsersForm } from '../components';
 
 export default function Home() {
   
-  const [screen, setScreen] = useState(1);
+  const [screen, setScreen] = useState(0);
 
   return (
     <div className={styles.container}>
       <HeadData />
 
       <main className={styles.main}>
-        {screen === 0 ? (<UserForm />) : screen === 1 ? (<TableTimezone />) : ""}
-        
-      </main>
+        {screen === 0 ? (<UsersForm />) : screen === 1 ? (<TableTimezone />) : ""}
+      </main> 
 
       <footer className={styles.footer}>
         <a

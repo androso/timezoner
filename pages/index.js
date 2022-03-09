@@ -4,12 +4,14 @@ import styles from '../styles/Home.module.css'
 import Select from "react-select";
 import { HeadData} from '../components';
 import { UsersForm, Timezones} from '../screens';
+import { GlobalStyle } from '../styles';
 export default function Home() {
   
   const [screen, setScreen] = useState(0);
 
   return (
     <div className={styles.container}>
+      <GlobalStyle />
       <HeadData />
 
       <main className={styles.main}>

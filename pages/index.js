@@ -1,10 +1,9 @@
 import { useState} from 'react';;
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
-import { CustomizeMenu } from '../styles'
 import Select from "react-select";
-import { HeadData, TableTimezone, UsersForm } from '../components';
-
+import { HeadData} from '../components';
+import { UsersForm, Timezones} from '../screens';
 export default function Home() {
   
   const [screen, setScreen] = useState(0);
@@ -14,7 +13,7 @@ export default function Home() {
       <HeadData />
 
       <main className={styles.main}>
-        {screen === 0 ? (<UsersForm />) : screen === 1 ? (<TableTimezone />) : ""}
+        {screen === 0 ? (<UsersForm />) : screen === 1 ? (<Timezones />) : ""}
       </main> 
 
       <footer className={styles.footer}>

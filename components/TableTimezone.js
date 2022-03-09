@@ -1,7 +1,7 @@
-import React from 'react';
+// import React from 'react';
 
-export default function TableTimezone() {
-  return (
-    <div>TableTimezone</div>
-  )
-}
+// export default function TableTimezone() {
+//   return (
+//     <div>TableTimezone</div>
+//   )
+// }

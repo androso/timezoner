@@ -61,20 +61,19 @@ export default function UsersForm({
 }
 
 function User({ registerField, deleteUser, users, fieldArrayName, index }) {
-	const handleDeleteUser = () => {
-		//TODO: if it is the first and only user, return false;
+	const handleDeleteUser = (userIndex) => {
+		deleteUser(userIndex);
 	};
 
 	return (
 		<>
 			<div className="tagline">Add a Friend</div>
 			<div className="user-container">
-				{/* //TODO: Show close button only if (user container > 1) || (usersLength > 1)  */}
-				{(users.length > 1 && index > 0) && (
+				{(users.length > 1 ) && (
 					<button
 						className="close-user"
 						onClick={() => {
-							handleDelete(index);
+							handleDeleteUser(index);
 						}}
 					>
 						<FontAwesomeIcon icon={faClose} />

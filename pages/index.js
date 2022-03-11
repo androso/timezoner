@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Select from "react-select";
 import { HeadData } from "../components";
 import { UsersForm, Timezones } from "../screens";
 import { GlobalStyle } from "../styles";
 import styled from "styled-components";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, useWatch } from "react-hook-form";
 
 export default function Home() {
 	const [screen, setScreen] = useState(0);
@@ -14,15 +14,21 @@ export default function Home() {
 		watch,
 		handleSubmit,
 		formState: { errors },
-	} = useForm();
+	} = useForm({
+		defaultValues: {
+			usersForms: [{ username: "", timezone: ""}]
+		}
+	});
 	
-	const { fields, append } = useFieldArray({
+	const { fields, append, remove } = useFieldArray({
 		control,
-		name: "usersFormsList",
+		name: "usersForms",
 	});
 
 	const submitForm = (data) => console.log(data);
 
+	console.log(watch('usersForms'));	
+	
 	return (
 		<div className="container">
 			<GlobalStyle />
@@ -32,14 +38,17 @@ export default function Home() {
 				{screen === 0 ? (
 					<UsersForm
 						registerField={register}
-						handleSubmit={handleSubmit(submitForm)}
-						formErrors={errors}
+						addUser={append}
+						deleteUser={remove}
+						users={fields}
+						fieldArrayName="usersForms"
 					/>
 				) : screen === 1 ? (
 					<Timezones />
 				) : (
 					""
 				)}
+				{/* <p>{watch()}</p>  */}
 			</main>
 
 			<StyledFooter>

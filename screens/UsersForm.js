@@ -171,6 +171,7 @@ function NestedUserSchedulesArray({
 							name={`${upperFieldArrayName}.${nestIndex}.preferedSchedule.${fieldIndex}.max`}
 							render={({field}) => (
 								<DatePicker
+									className="end-time-picker"
 									placeholderText={"End"}
 									selected={field.value}
 									onChange={(date) => field.onChange(date)}

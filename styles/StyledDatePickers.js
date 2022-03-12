@@ -2,20 +2,25 @@ import styled from "styled-components";
 
 const StyledDatePickers = styled.div`
     display: flex;
+    margin-bottom: 9px;
     input {
         max-width: 90px;
         text-align: center;
+        margin-bottom: 0 !important;
     }
     .text-separator {
         color: var(--white);
         font-size: 1rem;
         font-weight: 500;
-        align-self: flex-end;
-        padding-bottom: 1.1rem; //faking the centered state
+        align-self: center;
+        
     }
 
     input, .text-separator {
         margin-right: 10px;
+    }
+    .end-timegit-picker {
+        margin-right: 5px;
     }
     .react-datepicker-wrapper {
         width: initial;
@@ -28,6 +33,8 @@ const StyledDatePickers = styled.div`
     }
     .close-button {
 		cursor: pointer;
+        height: 1.5rem;
+        align-self: center;
 		font-size: 1.4rem;
 		background-color: transparent !important;
 		border: none;

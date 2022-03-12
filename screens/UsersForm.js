@@ -5,7 +5,9 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faClose } from "@fortawesome/free-solid-svg-icons";
 import { emptyUser } from "../utils/userSchema";
-import { useFieldArray } from "react-hook-form";
+import { useFieldArray, Controller } from "react-hook-form";
+
+
 //TODO: delete Userform in components
 
 export default function UsersForm({
@@ -117,6 +119,10 @@ function User({
 		</>
 	);
 }
+
+
+
+
 function NestedUserSchedulesArray({
 	nestIndex,
 	upperFieldArrayName,
@@ -127,6 +133,7 @@ function NestedUserSchedulesArray({
 		control,
 		name: `${upperFieldArrayName}.${nestIndex}.preferedSchedule`,
 	});
+
 	const [wantsToAddSchedules, setWantsToAddSchedules] = useState(false);
 
 	const handleAddSchedule = () => {
@@ -139,29 +146,42 @@ function NestedUserSchedulesArray({
 
 	return (
 		<>
-			{fields.map((scheduleField, index) => {
+			{fields.map((scheduleField, fieldIndex) => {
 				return (
-					
-					<StyledDatePickers className="schedule-container">
-						    <DatePicker
-								placeholderText={"Start"}
-								onChange={(date) => setStartDate(date)}
-								showTimeSelect
-								showTimeSelectOnly
-								timeIntervals={15}
-								timeCaption="Time"
-								dateFormat="h:mm aa"
-							/>
+					<StyledDatePickers className="schedule-container" key={fieldIndex}>
+						<Controller
+							control={control}
+							name={`${upperFieldArrayName}.${nestIndex}.preferedSchedule.${fieldIndex}.min`}
+							render={({field}) => (
+								<DatePicker
+									placeholderText={"Start"}
+									selected={field.value}
+									onChange={(date) => field.onChange(date)}
+									showTimeSelect
+									showTimeSelectOnly
+									timeIntervals={60}
+									timeCaption="Time"
+									dateFormat="h:mm aa"
+								/>
+							)}
+						/>
 							<span className="text-separator">to</span> 
-							<DatePicker
-								placeholderText={"End"}
-								onChange={(date) => setStartDate(date)}
-								showTimeSelect
-								showTimeSelectOnly
-								timeIntervals={15}
-								timeCaption="Time"
-								dateFormat="h:mm aa"
-							/>
+						<Controller
+							control={control}
+							name={`${upperFieldArrayName}.${nestIndex}.preferedSchedule.${fieldIndex}.max`}
+							render={({field}) => (
+								<DatePicker
+									placeholderText={"End"}
+									selected={field.value}
+									onChange={(date) => field.onChange(date)}
+									showTimeSelect
+									showTimeSelectOnly
+									timeIntervals={60}
+									timeCaption="Time"
+									dateFormat="h:mm aa"
+								/>	
+							)}
+						/>
 					</StyledDatePickers>	
 					
 				);

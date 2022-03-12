@@ -17,6 +17,15 @@ const StyledDatePickers = styled.div`
     input, .text-separator {
         margin-right: 10px;
     }
+    .react-datepicker-wrapper {
+        width: initial;
+    }
+    .react-datepicker__header {
+
+    }
+    .react-datepicker__time-container .react-datepicker__time {
+        
+    }
 `;
 
 export default StyledDatePickers;

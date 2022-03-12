@@ -32,13 +32,9 @@ export default function UsersForm({
 						return (
 							<User
 								key={item.id}
-								registerField={registerField}
-								deleteUser={deleteUser}
-								fieldArrayName={fieldArrayName}
 								userMapIndex={index}
-								users={users}
 								currentUser={item}
-								control={control}
+								{... {registerField, deleteUser, fieldArrayName, users, control}}
 							/>
 						);
 					})}
@@ -101,24 +97,30 @@ function User({ registerField, deleteUser, users, fieldArrayName, userMapIndex, 
 				/>
 				<NestedUserSchedulesArray
 					nestIndex={userMapIndex}
+					upperFieldArrayName={fieldArrayName}
 					{...{control, registerField}}
 				/>
 			</div>
 		</>
 	);
 }
-function NestedUserSchedulesArray({nestIndex, registerField, control}) {
+function NestedUserSchedulesArray({nestIndex,upperFieldArrayName,  registerField, control}) {
+	
 	const { fields, append} = useFieldArray({
 		control, 
-		name: `usersForm[${nestIndex}].preferedSchedule`
+		name: `${upperFieldArrayName}.${nestIndex}.preferedSchedule`
 	})
-
 	const [wantsToAddSchedules, setWantsToAddSchedules] = useState(false);
 
 	const handleAddSchedule = () => {
 		setWantsToAddSchedules(true);
+		append({
+			min: "10", 
+			max: "test"
+		})
+		console.log(fields, "current nested fields schedule");
 	};
-
+	
 	return (
 
 		<button

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyledUserForm } from "../styles";
+import { StyledUserForm, StyledDatePickers } from "../styles";
 import DatePicker from "react-datepicker";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -141,10 +141,29 @@ function NestedUserSchedulesArray({
 		<>
 			{fields.map((scheduleField, index) => {
 				return (
-					<div className="schedule-container" key={index}>
-						<input type="text" placeholder="Start" />
-						<input type="text" placeholder="End" />
-					</div>
+					
+					<StyledDatePickers className="schedule-container">
+						    <DatePicker
+								placeholderText={"Start"}
+								onChange={(date) => setStartDate(date)}
+								showTimeSelect
+								showTimeSelectOnly
+								timeIntervals={15}
+								timeCaption="Time"
+								dateFormat="h:mm aa"
+							/>
+							<span className="text-separator">to</span> 
+							<DatePicker
+								placeholderText={"End"}
+								onChange={(date) => setStartDate(date)}
+								showTimeSelect
+								showTimeSelectOnly
+								timeIntervals={15}
+								timeCaption="Time"
+								dateFormat="h:mm aa"
+							/>
+					</StyledDatePickers>	
+					
 				);
 			})}
 

@@ -14,7 +14,7 @@ export default function UsersForm({
 	deleteUser,
 	users,
 	fieldArrayName,
-	control
+	control,
 }) {
 	const handleAddUser = () => {
 		//TODO: if the user has not given any input for the prev user, return false;
@@ -34,7 +34,13 @@ export default function UsersForm({
 								key={item.id}
 								userMapIndex={index}
 								currentUser={item}
-								{... {registerField, deleteUser, fieldArrayName, users, control}}
+								{...{
+									registerField,
+									deleteUser,
+									fieldArrayName,
+									users,
+									control,
+								}}
 							/>
 						);
 					})}
@@ -57,14 +63,21 @@ export default function UsersForm({
 	);
 }
 
-function User({ registerField, deleteUser, users, fieldArrayName, userMapIndex, currentUser, control }) {
+function User({
+	registerField,
+	deleteUser,
+	users,
+	fieldArrayName,
+	userMapIndex,
+	currentUser,
+	control,
+}) {
 	//Schedules could be under this component state scope
 	const [wantsToAddSchedules, setWantsToAddSchedules] = useState(false);
 
 	const handleDeleteUser = (userIndex) => {
 		deleteUser(userIndex);
 	};
-	
 
 	return (
 		<>
@@ -98,37 +111,50 @@ function User({ registerField, deleteUser, users, fieldArrayName, userMapIndex, 
 				<NestedUserSchedulesArray
 					nestIndex={userMapIndex}
 					upperFieldArrayName={fieldArrayName}
-					{...{control, registerField}}
+					{...{ control, registerField }}
 				/>
 			</div>
 		</>
 	);
 }
-function NestedUserSchedulesArray({nestIndex,upperFieldArrayName,  registerField, control}) {
-	
-	const { fields, append} = useFieldArray({
-		control, 
-		name: `${upperFieldArrayName}.${nestIndex}.preferedSchedule`
-	})
+function NestedUserSchedulesArray({
+	nestIndex,
+	upperFieldArrayName,
+	registerField,
+	control,
+}) {
+	const { fields, append } = useFieldArray({
+		control,
+		name: `${upperFieldArrayName}.${nestIndex}.preferedSchedule`,
+	});
 	const [wantsToAddSchedules, setWantsToAddSchedules] = useState(false);
 
 	const handleAddSchedule = () => {
 		setWantsToAddSchedules(true);
 		append({
-			min: "10", 
-			max: "test"
-		})
-		console.log(fields, "current nested fields schedule");
+			min: "",
+			max: "",
+		});
 	};
-	
-	return (
 
-		<button
-			onClick={handleAddSchedule}
-			className="cta add-schedule"
-			title="Add new schedule"
-		>
-			<FontAwesomeIcon icon={faPlus} className="add-icon" /> Add Schedule
-		</button>
-	)
+	return (
+		<>
+			{fields.map((scheduleField, index) => {
+				return (
+					<div className="schedule-container" key={index}>
+						<input type="text" placeholder="Start" />
+						<input type="text" placeholder="End" />
+					</div>
+				);
+			})}
+
+			<button
+				onClick={handleAddSchedule}
+				className="cta add-schedule"
+				title="Add new schedule"
+			>
+				<FontAwesomeIcon icon={faPlus} className="add-icon" /> Add Schedule
+			</button>
+		</>
+	);
 }

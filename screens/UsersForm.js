@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faClose } from "@fortawesome/free-solid-svg-icons";
 import { emptyUser } from "../utils/userSchema";
-
+import { useFieldArray } from "react-hook-form";
 //TODO: delete Userform in components
 
 export default function UsersForm({
@@ -14,12 +14,11 @@ export default function UsersForm({
 	deleteUser,
 	users,
 	fieldArrayName,
+	control
 }) {
 	const handleAddUser = () => {
 		//TODO: if the user has not given any input for the prev user, return false;
-		addUser(
-			emptyUser
-		);
+		addUser(emptyUser);
 	};
 
 	return (
@@ -36,8 +35,10 @@ export default function UsersForm({
 								registerField={registerField}
 								deleteUser={deleteUser}
 								fieldArrayName={fieldArrayName}
-								index={index}
+								userMapIndex={index}
 								users={users}
+								currentUser={item}
+								control={control}
 							/>
 						);
 					})}
@@ -60,46 +61,72 @@ export default function UsersForm({
 	);
 }
 
-function User({ registerField, deleteUser, users, fieldArrayName, index }) {
+function User({ registerField, deleteUser, users, fieldArrayName, userMapIndex, currentUser, control }) {
+	//Schedules could be under this component state scope
+	const [wantsToAddSchedules, setWantsToAddSchedules] = useState(false);
+
 	const handleDeleteUser = (userIndex) => {
 		deleteUser(userIndex);
 	};
+	
 
 	return (
 		<>
 			<div className="tagline">Add a Friend</div>
 			<div className="user-container">
-				{(users.length > 1 ) && (
+				{users.length > 1 && (
 					<button
 						className="close-user"
 						onClick={() => {
-							handleDeleteUser(index);
+							handleDeleteUser(userMapIndex);
 						}}
 					>
 						<FontAwesomeIcon icon={faClose} />
 					</button>
 				)}
-
 				<input
 					type="text"
 					placeholder="Username"
-					{...registerField(`${fieldArrayName}.${index}.username`, {
-						required: "You must fill this field"
+					{...registerField(`${fieldArrayName}.${userMapIndex}.username`, {
+						required: "You must fill this field",
 					})}
 				/>
 				{/* //TODO: i want this timezone's value to change when clicked to `GMT${userinput}`*/}
 				<input
 					type="text"
 					placeholder="Timezone (GMT)"
-					{...registerField(`${fieldArrayName}.${index}.timezone`, {
-						required: "You must fill this field"
+					{...registerField(`${fieldArrayName}.${userMapIndex}.gmt`, {
+						required: "You must fill this field",
 					})}
 				/>
-				{/* //TODO: place here each new schedule, using a map over some state (collection of schedules) */}
-				<button className="cta add-schedule" title="Add new schedule">
-					<FontAwesomeIcon icon={faPlus} className="add-icon" /> Add Schedule
-				</button>
+				<NestedUserSchedulesArray
+					nestIndex={userMapIndex}
+					{...{control, registerField}}
+				/>
 			</div>
 		</>
 	);
+}
+function NestedUserSchedulesArray({nestIndex, registerField, control}) {
+	const { fields, append} = useFieldArray({
+		control, 
+		name: `usersForm[${nestIndex}].preferedSchedule`
+	})
+
+	const [wantsToAddSchedules, setWantsToAddSchedules] = useState(false);
+
+	const handleAddSchedule = () => {
+		setWantsToAddSchedules(true);
+	};
+
+	return (
+
+		<button
+			onClick={handleAddSchedule}
+			className="cta add-schedule"
+			title="Add new schedule"
+		>
+			<FontAwesomeIcon icon={faPlus} className="add-icon" /> Add Schedule
+		</button>
+	)
 }

@@ -17,7 +17,7 @@ export default function Home() {
 		formState: { errors },
 	} = useForm({
 		defaultValues: {
-			usersForms: [emptyUser],
+			usersForms: [{... emptyUser}],
 		},
 	});
 
@@ -31,7 +31,7 @@ export default function Home() {
 	const submitForm = (data) => console.log(data);
 
 	console.log(watch("usersForms"), "fields");
-	console.log(errors, "errors object");
+	// console.log(errors, "errors object");
 	return (
 		<div className="container">
 			<GlobalStyle />
@@ -45,6 +45,7 @@ export default function Home() {
 						deleteUser={remove}
 						users={fields}
 						fieldArrayName="usersForms"
+						control={control}
 					/>
 				) : screen === 1 ? (
 					<Timezones />

@@ -9,4 +9,3 @@ export let emptyUser = {
     ]
 }
 
-// export default emptyUser;

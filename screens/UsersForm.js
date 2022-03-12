@@ -8,7 +8,7 @@ import { emptyUser } from "../utils/userSchema";
 import { useFieldArray, Controller } from "react-hook-form";
 
 
-//TODO: delete Userform in components
+
 
 export default function UsersForm({
 	registerField,
@@ -19,7 +19,6 @@ export default function UsersForm({
 	control,
 }) {
 	const handleAddUser = () => {
-		//TODO: if the user has not given any input for the prev user, return false;
 		addUser(emptyUser);
 	};
 
@@ -129,11 +128,10 @@ function NestedUserSchedulesArray({
 	registerField,
 	control,
 }) {
-	const { fields, append } = useFieldArray({
+	const { fields, append, remove } = useFieldArray({
 		control,
 		name: `${upperFieldArrayName}.${nestIndex}.preferedSchedule`,
 	});
-
 	const [wantsToAddSchedules, setWantsToAddSchedules] = useState(false);
 
 	const handleAddSchedule = () => {
@@ -143,12 +141,14 @@ function NestedUserSchedulesArray({
 			max: "",
 		});
 	};
+	const handleDeleteSchedule = () => {
 
+	}
 	return (
 		<>
 			{fields.map((scheduleField, fieldIndex) => {
 				return (
-					<StyledDatePickers className="schedule-container" key={fieldIndex}>
+					<StyledDatePickers className="schedule-container" key={scheduleField.id}>
 						<Controller
 							control={control}
 							name={`${upperFieldArrayName}.${nestIndex}.preferedSchedule.${fieldIndex}.min`}
@@ -182,6 +182,13 @@ function NestedUserSchedulesArray({
 								/>	
 							)}
 						/>
+						<button
+							onClick={() => {
+								remove(scheduleField.id)
+							}}
+						>
+							<FontAwesomeIcon icon={faClose} />
+						</button>
 					</StyledDatePickers>	
 					
 				);

@@ -24,7 +24,18 @@ const StyledDatePickers = styled.div`
 
     }
     .react-datepicker__time-container .react-datepicker__time {
-        
+
+    }
+    .close-button {
+		cursor: pointer;
+		font-size: 1.4rem;
+		background-color: transparent !important;
+		border: none;
+		color: var(--black-pale);
+        transition: color .3s ease; 
+    }
+    .close-button:hover {
+        color: var(--black);
     }
 `;
 

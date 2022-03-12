@@ -3,7 +3,7 @@ import { StyledUserForm, StyledDatePickers } from "../styles";
 import DatePicker from "react-datepicker";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faClose } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faCircleXmark, faClose } from "@fortawesome/free-solid-svg-icons";
 import { emptyUser } from "../utils/userSchema";
 import { useFieldArray, Controller } from "react-hook-form";
 
@@ -183,11 +183,12 @@ function NestedUserSchedulesArray({
 							)}
 						/>
 						<button
+							className="close-button"
 							onClick={() => {
 								remove(scheduleField.id)
 							}}
 						>
-							<FontAwesomeIcon icon={faClose} />
+							<FontAwesomeIcon icon={faCircleXmark} />
 						</button>
 					</StyledDatePickers>	
 					

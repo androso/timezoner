@@ -4,6 +4,7 @@ import DatePicker from "react-datepicker";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faClose } from "@fortawesome/free-solid-svg-icons";
+import { emptyUser } from "../utils/userSchema";
 
 //TODO: delete Userform in components
 
@@ -16,10 +17,9 @@ export default function UsersForm({
 }) {
 	const handleAddUser = () => {
 		//TODO: if the user has not given any input for the prev user, return false;
-		addUser({
-			username: "",
-			timezone: "",
-		});
+		addUser(
+			emptyUser
+		);
 	};
 
 	return (
@@ -83,13 +83,17 @@ function User({ registerField, deleteUser, users, fieldArrayName, index }) {
 				<input
 					type="text"
 					placeholder="Username"
-					{...registerField(`${fieldArrayName}.${index}.username`)}
+					{...registerField(`${fieldArrayName}.${index}.username`, {
+						required: "You must fill this field"
+					})}
 				/>
 				{/* //TODO: i want this timezone's value to change when clicked to `GMT${userinput}`*/}
 				<input
 					type="text"
 					placeholder="Timezone (GMT)"
-					{...registerField(`${fieldArrayName}.${index}.timezone`)}
+					{...registerField(`${fieldArrayName}.${index}.timezone`, {
+						required: "You must fill this field"
+					})}
 				/>
 				{/* //TODO: place here each new schedule, using a map over some state (collection of schedules) */}
 				<button className="cta add-schedule" title="Add new schedule">

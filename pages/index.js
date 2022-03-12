@@ -5,6 +5,7 @@ import { UsersForm, Timezones } from "../screens";
 import { GlobalStyle } from "../styles";
 import styled from "styled-components";
 import { useForm, useFieldArray, useWatch } from "react-hook-form";
+import { emptyUser } from "../utils/userSchema";
 
 export default function Home() {
 	const [screen, setScreen] = useState(0);
@@ -16,19 +17,21 @@ export default function Home() {
 		formState: { errors },
 	} = useForm({
 		defaultValues: {
-			usersForms: [{ username: "", timezone: ""}]
-		}
+			usersForms: [emptyUser],
+		},
 	});
-	
+
 	const { fields, append, remove } = useFieldArray({
 		control,
 		name: "usersForms",
 	});
-
+	useEffect(() => {
+		// console.log(emptyUser, "user schema ");
+	}, []);
 	const submitForm = (data) => console.log(data);
 
-	console.log(watch('usersForms'));	
-	
+	console.log(watch("usersForms"), "fields");
+	console.log(errors, "errors object");
 	return (
 		<div className="container">
 			<GlobalStyle />

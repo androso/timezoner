@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { StyledUserForm, StyledDatePickers } from "../styles";
 import DatePicker from "react-datepicker";
-import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus, faCircleXmark, faClose } from "@fortawesome/free-solid-svg-icons";
+import {
+	faPlus,
+	faCircleXmark,
+	faClose,
+} from "@fortawesome/free-solid-svg-icons";
 import { emptyUser } from "../utils/userSchema";
 import { useFieldArray, Controller } from "react-hook-form";
 
-
-
-
-export default function UsersForm({
+export default React.memo(function UsersForm({
 	registerField,
 	addUser,
 	deleteUser,
@@ -62,9 +62,9 @@ export default function UsersForm({
 			</StyledUserForm>
 		</>
 	);
-}
+});
 
-function User({
+const User = React.memo(function ({
 	registerField,
 	deleteUser,
 	users,
@@ -73,7 +73,6 @@ function User({
 	currentUser,
 	control,
 }) {
-	//Schedules could be under this component state scope
 	const [wantsToAddSchedules, setWantsToAddSchedules] = useState(false);
 
 	const handleDeleteUser = (userIndex) => {
@@ -117,15 +116,11 @@ function User({
 			</div>
 		</>
 	);
-}
+});
 
-
-
-
-function NestedUserSchedulesArray({
+const NestedUserSchedulesArray = React.memo(function ({
 	nestIndex,
 	upperFieldArrayName,
-	registerField,
 	control,
 }) {
 	const { fields, append, remove } = useFieldArray({
@@ -141,18 +136,20 @@ function NestedUserSchedulesArray({
 			max: "",
 		});
 	};
-	const handleDeleteSchedule = () => {
+	console.log(fields.length);
 
-	}
 	return (
 		<>
 			{fields.map((scheduleField, fieldIndex) => {
 				return (
-					<StyledDatePickers className="schedule-container" key={scheduleField.id}>
+					<StyledDatePickers
+						className="schedule-container"
+						key={scheduleField.id}
+					>
 						<Controller
 							control={control}
 							name={`${upperFieldArrayName}.${nestIndex}.preferedSchedule.${fieldIndex}.min`}
-							render={({field}) => (
+							render={({ field }) => (
 								<DatePicker
 									placeholderText={"Start"}
 									selected={field.value}
@@ -165,11 +162,11 @@ function NestedUserSchedulesArray({
 								/>
 							)}
 						/>
-							<span className="text-separator">to</span> 
+						<span className="text-separator">to</span>
 						<Controller
 							control={control}
 							name={`${upperFieldArrayName}.${nestIndex}.preferedSchedule.${fieldIndex}.max`}
-							render={({field}) => (
+							render={({ field }) => (
 								<DatePicker
 									className="end-time-picker"
 									placeholderText={"End"}
@@ -180,19 +177,18 @@ function NestedUserSchedulesArray({
 									timeIntervals={60}
 									timeCaption="Time"
 									dateFormat="h:mm aa"
-								/>	
+								/>
 							)}
 						/>
 						<button
 							className="close-button"
 							onClick={() => {
-								remove(scheduleField.id)
+								remove(scheduleField.id);
 							}}
 						>
 							<FontAwesomeIcon icon={faCircleXmark} />
 						</button>
-					</StyledDatePickers>	
-					
+					</StyledDatePickers>
 				);
 			})}
 
@@ -205,4 +201,4 @@ function NestedUserSchedulesArray({
 			</button>
 		</>
 	);
-}
+});

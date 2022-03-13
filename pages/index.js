@@ -14,6 +14,7 @@ export default function Home() {
 		control,
 		watch,
 		handleSubmit,
+		getValues, 
 		formState: { errors },
 	} = useForm({
 		defaultValues: {
@@ -25,13 +26,14 @@ export default function Home() {
 		control,
 		name: "usersForms",
 	});
-	useEffect(() => {
-		// console.log(emptyUser, "user schema ");
-	}, []);
-	const submitForm = (data) => console.log(data);
+	
+	const submitForm = (event) => {
+		event.preventDefault();
+		// console.log(getValues("usersForms"))
+	}
 
-	console.log(watch("usersForms"), "fields");
-	// console.log(errors, "errors object");
+	console.log(errors, "errors object");
+	// console.log(watch("usersForms"), "fields");
 	return (
 		<div className="container">
 			<GlobalStyle />
@@ -45,7 +47,7 @@ export default function Home() {
 						deleteUser={remove}
 						users={fields}
 						fieldArrayName="usersForms"
-						control={control}
+						{...{submitForm, control}}
 					/>
 				) : screen === 1 ? (
 					<Timezones />

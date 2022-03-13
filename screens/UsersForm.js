@@ -17,6 +17,7 @@ export default React.memo(function UsersForm({
 	users,
 	fieldArrayName,
 	control,
+	submitForm
 }) {
 	const handleAddUser = () => {
 		addUser(emptyUser);
@@ -24,11 +25,12 @@ export default React.memo(function UsersForm({
 
 	return (
 		<>
-			<StyledUserForm>
+			<StyledUserForm onSubmit={submitForm}>
 				<div className="upper-text-container">
 					<h1 className="title">Schedule between timezones</h1>
 				</div>
 				<div className="form-container">
+					
 					{users.map((item, index) => {
 						return (
 							<User
@@ -47,12 +49,13 @@ export default React.memo(function UsersForm({
 					})}
 
 					<div className="form-footer-actions">
-						<button className="cta start" title="Start conversion">
+						<button className="cta start" title="Start conversion" onClick={submitForm}>
 							START
 						</button>
 						<button
 							className="cta add-user"
 							title="Add new friend"
+							type="submit"
 							onClick={handleAddUser}
 						>
 							<FontAwesomeIcon icon={faPlus} className="add-icon" />
@@ -97,7 +100,14 @@ const User = React.memo(function ({
 					type="text"
 					placeholder="Username"
 					{...registerField(`${fieldArrayName}.${userMapIndex}.username`, {
-						required: "You must fill this field",
+						maxLength: {
+							value: 40,
+							message: "Username should be less than 40 characters"
+						},
+						minLength: {
+							value: 2,
+							message: "Username should be more than or equal to 2 characters"
+						}
 					})}
 				/>
 				{/* //TODO: i want this timezone's value to change when clicked to `GMT${userinput}`*/}
@@ -122,6 +132,7 @@ const NestedUserSchedulesArray = React.memo(function ({
 	nestIndex,
 	upperFieldArrayName,
 	control,
+	registerField
 }) {
 	const { fields, append, remove } = useFieldArray({
 		control,

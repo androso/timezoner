@@ -1,6 +1,6 @@
 
 import styled from "styled-components";
-const StyledUserForm = styled.div`
+const StyledUserForm = styled.form`
     text-align: center;
     .title {
         margin-bottom: 50px;

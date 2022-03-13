@@ -33,8 +33,8 @@ export default function Home() {
 		// console.log(getValues("usersForms"))
 	}
 
-	console.log(errors, "errors object");
-	// console.log(watch("usersForms"), "fields");
+	// console.log(errors, "errors object");
+	console.log(watch("usersForms"), "fields");
 	return (
 		<div className="container">
 			<GlobalStyle />

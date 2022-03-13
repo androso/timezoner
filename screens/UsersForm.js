@@ -11,6 +11,9 @@ import {
 import { emptyUser } from "../utils/userSchema";
 import { useFieldArray, Controller } from "react-hook-form";
 
+
+const timezonePrefix = 'GMT';
+
 export default React.memo(function UsersForm({
 	registerField,
 	addUser,
@@ -81,11 +84,28 @@ const User = function ({
 	errors
 }) {
 	const [wantsToAddSchedules, setWantsToAddSchedules] = useState(false);
-
 	const handleDeleteUser = (userIndex) => {
 		deleteUser(userIndex);
 	};
+	
+	
+	const validateTimezoneInput = (currentText) => {
+		{
+			//TODO: CODE REVIEW
+		}
 
+		
+		
+		// If user is trying to delete "GMT" prefix
+		if (currentText.substring(0, timezonePrefix.length) !== timezonePrefix) {
+			return false;
+		} else {
+			// TODO: use a regex expression to only take +[2 digits hour]:[2 digits minutes] or -[2 digits hour]:[2 digits minutes] at most
+			// We will need to have more than one regex, for each case maybe?
+		}
+
+		return true;
+	}
 	return (
 		<>
 			<div className="tagline">Add a Friend</div>
@@ -117,6 +137,10 @@ const User = function ({
 							}
 						})}
 					/>
+
+					{
+						//TODO: CODE REVIEW
+					}
 					{errors?.[fieldArrayName]?.[userMapIndex]?.username?.message && (
 						<p className="error-message">
 							<FontAwesomeIcon 
@@ -126,15 +150,34 @@ const User = function ({
 							{errors?.[fieldArrayName]?.[userMapIndex]?.username?.message}							
 						</p>
 					)}
+
 				</div> 
 				<div className="input-container">
-					<input
-						type="text"
-						placeholder="Timezone (GMT)"
-						autoComplete="off"
-						{...registerField(`${fieldArrayName}.${userMapIndex}.gmt`, {
-							required: "You must fill this field",
-						})}
+					{
+						//TODO: CODE REVIEW
+						//TODO: change the onclick event so that it changes the value the first time
+					}
+					<Controller 
+						{...{control}}
+						name={`${fieldArrayName}.${userMapIndex}.gmt`}
+						render={ ({ field }) => (
+							<input
+								type="text"
+								placeholder="Timezone (GMT)"
+								autoComplete="off"
+								onChange={(e) => {
+									if (validateTimezoneInput(e.target.value)) {
+										field.onChange(e)	
+									}
+								}}
+								onClick={(e) => {
+									if (field.value === "") {
+										field.onChange(timezonePrefix)
+									}
+								}}
+								value={field.value}
+							/>
+						)}
 					/>
 				</div>
 				<NestedUserSchedulesArray

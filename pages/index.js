@@ -28,13 +28,12 @@ export default function Home() {
 		name: "usersForms",
 	});
 	
-	const submitForm = (event) => {
-		event.preventDefault();
-		// console.log(getValues("usersForms"))
-	}
+	const submitForm = (data) => {
+		console.log(data);
+	}	
 
 	// console.log(errors, "errors object");
-	console.log(watch("usersForms"), "fields");
+	// console.log(watch("usersForms"), "fields");
 	return (
 		<div className="container">
 			<GlobalStyle />
@@ -48,7 +47,7 @@ export default function Home() {
 						deleteUser={remove}
 						users={fields}
 						fieldArrayName="usersForms"
-						{...{submitForm, control, errors}}
+						{...{ control, errors, handleSubmit, submitForm}}
 					/>
 				) : screen === 1 ? (
 					<Timezones />

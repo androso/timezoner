@@ -6,13 +6,12 @@ import {
 	faPlus,
 	faCircleXmark,
 	faClose,
-	faTriangleExclamation
+	faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
 import { emptyUser } from "../utils/userSchema";
 import { useFieldArray, Controller } from "react-hook-form";
 
-
-const timezonePrefix = 'GMT';
+const timezonePrefix = "GMT";
 
 export default React.memo(function UsersForm({
 	registerField,
@@ -21,8 +20,9 @@ export default React.memo(function UsersForm({
 	users,
 	fieldArrayName,
 	control,
+	errors,
+	handleSubmit,
 	submitForm,
-	errors
 }) {
 	const handleAddUser = () => {
 		addUser(emptyUser);
@@ -30,12 +30,11 @@ export default React.memo(function UsersForm({
 
 	return (
 		<>
-			<StyledUserForm onSubmit={submitForm}>
+			<StyledUserForm onSubmit={handleSubmit(submitForm)}>
 				<div className="upper-text-container">
 					<h1 className="title">Schedule between timezones</h1>
 				</div>
 				<div className="form-container">
-					
 					{users.map((item, index) => {
 						return (
 							<User
@@ -48,14 +47,18 @@ export default React.memo(function UsersForm({
 									fieldArrayName,
 									users,
 									control,
-									errors
+									errors,
 								}}
 							/>
 						);
 					})}
 
 					<div className="form-footer-actions">
-						<button className="cta start" title="Start conversion" onClick={submitForm}>
+						<button
+							className="cta start"
+							title="Start conversion"
+							onClick={handleSubmit(submitForm)}
+						>
 							START
 						</button>
 						<button
@@ -81,21 +84,22 @@ const User = function ({
 	userMapIndex,
 	currentUser,
 	control,
-	errors
+	errors,
 }) {
 	const [wantsToAddSchedules, setWantsToAddSchedules] = useState(false);
 	const handleDeleteUser = (userIndex) => {
 		deleteUser(userIndex);
 	};
-	
-	
+
 	const validateTimezoneInput = (currentText) => {
 		{
 			//TODO: CODE REVIEW
 		}
+		const hourWithMinutesRegex =
+			/[/+-\-](([01]?[0-2])|(12)):(([0-5][0-9])|59)$/; // 10:30, 2:15
+		const hoursTwoDigitsRegex = /[/+-\-](([01]?[0-2])|(12))$/; //10, 11, 12
+		const hourSingleDigitRegex = /[\+-\-]\d$/; // 2, 5, 9
 
-		
-		
 		// If user is trying to delete "GMT" prefix
 		if (currentText.substring(0, timezonePrefix.length) !== timezonePrefix) {
 			return false;
@@ -105,7 +109,7 @@ const User = function ({
 		}
 
 		return true;
-	}
+	};
 	return (
 		<>
 			<div className="tagline">Add a Friend</div>
@@ -120,7 +124,7 @@ const User = function ({
 						<FontAwesomeIcon icon={faClose} />
 					</button>
 				)}
-				<div className="input-container">	
+				<div className="input-container">
 					<input
 						type="text"
 						placeholder="Username"
@@ -129,12 +133,12 @@ const User = function ({
 							required: "You must fill this field",
 							maxLength: {
 								value: 40,
-								message: "Username is too long"
+								message: "Username is too long",
 							},
 							minLength: {
 								value: 2,
-								message: "Username is too short"
-							}
+								message: "Username is too short",
+							},
 						})}
 					/>
 
@@ -143,36 +147,34 @@ const User = function ({
 					}
 					{errors?.[fieldArrayName]?.[userMapIndex]?.username?.message && (
 						<p className="error-message">
-							<FontAwesomeIcon 
+							<FontAwesomeIcon
 								icon={faTriangleExclamation}
 								className="danger-icon"
 							/>
-							{errors?.[fieldArrayName]?.[userMapIndex]?.username?.message}							
+							{errors?.[fieldArrayName]?.[userMapIndex]?.username?.message}
 						</p>
 					)}
-
-				</div> 
+				</div>
 				<div className="input-container">
 					{
 						//TODO: CODE REVIEW
-						//TODO: change the onclick event so that it changes the value the first time
 					}
-					<Controller 
-						{...{control}}
+					<Controller
+						{...{ control }}
 						name={`${fieldArrayName}.${userMapIndex}.gmt`}
-						render={ ({ field }) => (
+						render={({ field }) => (
 							<input
 								type="text"
 								placeholder="Timezone (GMT)"
 								autoComplete="off"
 								onChange={(e) => {
 									if (validateTimezoneInput(e.target.value)) {
-										field.onChange(e)	
+										field.onChange(e);
 									}
 								}}
 								onClick={(e) => {
 									if (field.value === "") {
-										field.onChange(timezonePrefix)
+										field.onChange(timezonePrefix);
 									}
 								}}
 								value={field.value}
@@ -194,7 +196,7 @@ const NestedUserSchedulesArray = React.memo(function ({
 	nestIndex,
 	upperFieldArrayName,
 	control,
-	registerField
+	registerField,
 }) {
 	const { fields, append, remove } = useFieldArray({
 		control,
@@ -209,10 +211,9 @@ const NestedUserSchedulesArray = React.memo(function ({
 			max: "",
 		});
 	};
-	console.log(fields.length);
-
+	console.log(fields, "fields schedules");
 	return (
-		<>
+		<>	
 			{fields.map((scheduleField, fieldIndex) => {
 				return (
 					<StyledDatePickers
@@ -264,11 +265,11 @@ const NestedUserSchedulesArray = React.memo(function ({
 					</StyledDatePickers>
 				);
 			})}
-
 			<button
 				onClick={handleAddSchedule}
 				className="cta add-schedule"
 				title="Add new schedule"
+				type="button"
 			>
 				<FontAwesomeIcon icon={faPlus} className="add-icon" /> Add Schedule
 			</button>

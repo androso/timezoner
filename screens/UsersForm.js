@@ -6,6 +6,7 @@ import {
 	faPlus,
 	faCircleXmark,
 	faClose,
+	faTriangleExclamation
 } from "@fortawesome/free-solid-svg-icons";
 import { emptyUser } from "../utils/userSchema";
 import { useFieldArray, Controller } from "react-hook-form";
@@ -17,7 +18,8 @@ export default React.memo(function UsersForm({
 	users,
 	fieldArrayName,
 	control,
-	submitForm
+	submitForm,
+	errors
 }) {
 	const handleAddUser = () => {
 		addUser(emptyUser);
@@ -43,6 +45,7 @@ export default React.memo(function UsersForm({
 									fieldArrayName,
 									users,
 									control,
+									errors
 								}}
 							/>
 						);
@@ -67,7 +70,7 @@ export default React.memo(function UsersForm({
 	);
 });
 
-const User = React.memo(function ({
+const User = function ({
 	registerField,
 	deleteUser,
 	users,
@@ -75,6 +78,7 @@ const User = React.memo(function ({
 	userMapIndex,
 	currentUser,
 	control,
+	errors
 }) {
 	const [wantsToAddSchedules, setWantsToAddSchedules] = useState(false);
 
@@ -96,28 +100,43 @@ const User = React.memo(function ({
 						<FontAwesomeIcon icon={faClose} />
 					</button>
 				)}
-				<input
-					type="text"
-					placeholder="Username"
-					{...registerField(`${fieldArrayName}.${userMapIndex}.username`, {
-						maxLength: {
-							value: 40,
-							message: "Username should be less than 40 characters"
-						},
-						minLength: {
-							value: 2,
-							message: "Username should be more than or equal to 2 characters"
-						}
-					})}
-				/>
-				{/* //TODO: i want this timezone's value to change when clicked to `GMT${userinput}`*/}
-				<input
-					type="text"
-					placeholder="Timezone (GMT)"
-					{...registerField(`${fieldArrayName}.${userMapIndex}.gmt`, {
-						required: "You must fill this field",
-					})}
-				/>
+				<div className="input-container">	
+					<input
+						type="text"
+						placeholder="Username"
+						autoComplete="off"
+						{...registerField(`${fieldArrayName}.${userMapIndex}.username`, {
+							required: "You must fill this field",
+							maxLength: {
+								value: 40,
+								message: "Username is too long"
+							},
+							minLength: {
+								value: 2,
+								message: "Username is too short"
+							}
+						})}
+					/>
+					{errors?.[fieldArrayName]?.[userMapIndex]?.username?.message && (
+						<p className="error-message">
+							<FontAwesomeIcon 
+								icon={faTriangleExclamation}
+								className="danger-icon"
+							/>
+							{errors?.[fieldArrayName]?.[userMapIndex]?.username?.message}							
+						</p>
+					)}
+				</div> 
+				<div className="input-container">
+					<input
+						type="text"
+						placeholder="Timezone (GMT)"
+						autoComplete="off"
+						{...registerField(`${fieldArrayName}.${userMapIndex}.gmt`, {
+							required: "You must fill this field",
+						})}
+					/>
+				</div>
 				<NestedUserSchedulesArray
 					nestIndex={userMapIndex}
 					upperFieldArrayName={fieldArrayName}
@@ -126,7 +145,7 @@ const User = React.memo(function ({
 			</div>
 		</>
 	);
-});
+};
 
 const NestedUserSchedulesArray = React.memo(function ({
 	nestIndex,

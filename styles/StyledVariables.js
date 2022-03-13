@@ -9,6 +9,9 @@ const variables = css`
 		--black-pale: #333;
 		--black: #000;
 		--white: #fafafa;
+		--orange-pale: #f8c891;
+		--yellow: #fffbb1; 
+
 		--font-stack: "Poppins", "Inter", "Roboto", -apple-system,
 			BlinkMacSystemFont, system-ui, sans-serif;
 

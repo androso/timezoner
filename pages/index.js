@@ -20,6 +20,7 @@ export default function Home() {
 		defaultValues: {
 			usersForms: [{... emptyUser}],
 		},
+		mode: "onBlur"
 	});
 
 	const { fields, append, remove } = useFieldArray({
@@ -47,7 +48,7 @@ export default function Home() {
 						deleteUser={remove}
 						users={fields}
 						fieldArrayName="usersForms"
-						{...{submitForm, control}}
+						{...{submitForm, control, errors}}
 					/>
 				) : screen === 1 ? (
 					<Timezones />

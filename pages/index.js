@@ -20,7 +20,7 @@ export default function Home() {
 		defaultValues: {
 			usersForms: [{... emptyUser}],
 		},
-		mode: "all"
+		mode: "onBlur"
 	});
 
 	const { fields, append, remove } = useFieldArray({

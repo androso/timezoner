@@ -20,7 +20,7 @@ export default function Home() {
 		defaultValues: {
 			usersForms: [{... emptyUser}],
 		},
-		mode: "onBlur"
+		mode: "all"
 	});
 
 	const { fields, append, remove } = useFieldArray({
@@ -32,8 +32,8 @@ export default function Home() {
 		console.log(data);
 	}	
 
-	// console.log(errors, "errors object");
-	// console.log(watch("usersForms"), "fields");
+	console.log(errors, "errors object");
+	console.log(watch("usersForms"), "fields");
 	return (
 		<div className="container">
 			<GlobalStyle />

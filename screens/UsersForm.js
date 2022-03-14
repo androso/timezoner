@@ -158,9 +158,11 @@ const User = function ({
 				<div className="input-container">
 					{
 						//TODO: CODE REVIEW
+						//TODO: solve the onblur validation problem, right now if you change form to "all" it gets solved.
+						//TODO: Find a better solution
 					}
 					<Controller
-						{...{ control }}
+						control={control}
 						name={`${fieldArrayName}.${userMapIndex}.gmt`}
 						render={({ field }) => (
 							<input
@@ -180,7 +182,21 @@ const User = function ({
 								value={field.value}
 							/>
 						)}
+						rules={{ minLength: {
+							value: 10,
+							message: "too short"
+						} }}
 					/>
+
+					{errors?.[fieldArrayName]?.[userMapIndex]?.gmt?.message && (
+						<p className="error-message">
+							<FontAwesomeIcon
+								icon={faTriangleExclamation}
+								className="danger-icon"
+							/>
+							{errors?.[fieldArrayName]?.[userMapIndex]?.gmt?.message}
+						</p>
+					)}
 				</div>
 				<NestedUserSchedulesArray
 					nestIndex={userMapIndex}
@@ -213,7 +229,7 @@ const NestedUserSchedulesArray = React.memo(function ({
 	};
 	console.log(fields, "fields schedules");
 	return (
-		<>	
+		<>
 			{fields.map((scheduleField, fieldIndex) => {
 				return (
 					<StyledDatePickers

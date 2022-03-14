@@ -158,6 +158,8 @@ const User = function ({
 				<div className="input-container">
 					{
 						//TODO: CODE REVIEW
+						//TODO: solve the onblur validation problem, right now if you change form to "all" it gets solved.
+						//TODO: Find a better solution
 					}
 					<Controller
 						control={control}
@@ -168,6 +170,11 @@ const User = function ({
 								placeholder="Timezone (GMT)"
 								autoComplete="off"
 								value={field.value}
+								onChange={(e) => {
+									if (validateTimezoneInput(e.target.value)) {
+										field.onChange(e);
+									}
+								}}
 								onClick={(e) => {
 									if (field.value === "") {
 										field.onChange(timezonePrefix);

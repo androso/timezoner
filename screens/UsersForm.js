@@ -12,6 +12,10 @@ import { emptyUser } from "../utils/userSchema";
 import { useFieldArray, Controller } from "react-hook-form";
 
 const timezonePrefix = "GMT";
+const hourWithMinutesRegex = /[/+-\-](([01]?[0-2])|(12)):(([0-5][0-9])|59)$/; // 10:30, 2:15
+const hoursTwoDigitsRegex = /[/+-\-](([01]?[0-2])|(12))$/; //10, 11, 12
+const hourSingleDigitRegex = /[\+-\-]\d$/; // 2, 5, 9
+const validCharRegex = /[0-9|:|\+|\-]/;
 
 export default React.memo(function UsersForm({
 	registerField,
@@ -91,24 +95,23 @@ const User = function ({
 		deleteUser(userIndex);
 	};
 
-	const validateTimezoneInput = (currentText) => {
+	const validateTimezoneInput = (e) => {
 		{
 			//TODO: CODE REVIEW
 		}
-		const hourWithMinutesRegex =
-			/[/+-\-](([01]?[0-2])|(12)):(([0-5][0-9])|59)$/; // 10:30, 2:15
-		const hoursTwoDigitsRegex = /[/+-\-](([01]?[0-2])|(12))$/; //10, 11, 12
-		const hourSingleDigitRegex = /[\+-\-]\d$/; // 2, 5, 9
+		const currentText = e.target.value;
+		const lastChar = currentText.charAt(currentText.length - 1);
 
-		// If user is trying to delete "GMT" prefix
-		if (currentText.substring(0, timezonePrefix.length) !== timezonePrefix) {
-			return false;
-		} else {
-			// TODO: use a regex expression to only take +[2 digits hour]:[2 digits minutes] or -[2 digits hour]:[2 digits minutes] at most
-			// We will need to have more than one regex, for each case maybe?
+		// First checks if the new character is valid
+		// Second makes sure that the user is not trying to delete a character from the prefix
+		if (
+			lastChar.match(validCharRegex) ||
+			currentText.substring(0, timezonePrefix.length) === timezonePrefix
+		) {
+			return true;
 		}
 
-		return true;
+		return false;
 	};
 	return (
 		<>
@@ -158,8 +161,6 @@ const User = function ({
 				<div className="input-container">
 					{
 						//TODO: CODE REVIEW
-						//TODO: solve the onblur validation problem, right now if you change form to "all" it gets solved.
-						//TODO: Find a better solution
 					}
 					<Controller
 						control={control}
@@ -171,7 +172,7 @@ const User = function ({
 								autoComplete="off"
 								value={field.value}
 								onChange={(e) => {
-									if (validateTimezoneInput(e.target.value)) {
+									if (validateTimezoneInput(e)) {
 										field.onChange(e);
 									}
 								}}
@@ -183,16 +184,16 @@ const User = function ({
 								onBlur={field.onBlur}
 							/>
 						)}
-						rules={{ 
+						rules={{
 							minLength: {
 								value: 5,
-								message: "Invalid timezone"
+								message: "Invalid timezone",
 							},
 							maxLength: {
-								value: 8,
-								message: "Invalid timezone"
+								value: 9,
+								message: "Invalid timezone",
 							},
-							required: "this must be filled"
+							required: "this must be filled",
 						}}
 					/>
 
@@ -295,7 +296,8 @@ const NestedUserSchedulesArray = React.memo(function ({
 				title="Add new schedule"
 				type="button"
 			>
-				<FontAwesomeIcon icon={faPlus} className="add-icon" /> Add Schedule
+				<FontAwesomeIcon icon={faPlus} className="add-icon" /> Add Prefered
+				Schedule
 			</button>
 		</>
 	);

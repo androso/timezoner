@@ -1,6 +1,6 @@
 export let emptyUser = { 
     username: "", 
-    gmt: ""
+    gmt: "",
     // preferedSchedule: [
     //     {
     //         min: null,
@@ -8,5 +8,3 @@ export let emptyUser = {
     //     }
     // ]
 }
-
-// It's not adding a preferedSchedule array

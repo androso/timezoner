@@ -120,6 +120,7 @@ const User = function ({
 				{users.length > 1 && (
 					<button
 						className="close-user"
+						type="button"
 						onClick={() => {
 							handleDeleteUser(userMapIndex);
 						}}
@@ -227,10 +228,10 @@ const NestedUserSchedulesArray = React.memo(function ({
 		control,
 		name: `${upperFieldArrayName}.${nestIndex}.preferedSchedule`,
 	});
-	const [wantsToAddSchedules, setWantsToAddSchedules] = useState(false);
+	// const [wantsToAddSchedules, setWantsToAddSchedules] = useState(false);
 
 	const handleAddSchedule = () => {
-		setWantsToAddSchedules(true);
+		// setWantsToAddSchedules(true);
 		append({
 			min: "",
 			max: "",
@@ -281,6 +282,7 @@ const NestedUserSchedulesArray = React.memo(function ({
 						/>
 						<button
 							className="close-button"
+							type="button"
 							onClick={() => {
 								remove(scheduleField.id);
 							}}

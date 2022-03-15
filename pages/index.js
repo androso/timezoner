@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import Select from "react-select";
-import { HeadData } from "../components";
-import { UsersForm, Timezones } from "../screens";
-import { GlobalStyle } from "../styles";
+import { HeadData } from "../app/components";
+import { UsersForm, Timezones } from "../app/screens";
+import { GlobalStyle } from "../app/styles";
 import styled from "styled-components";
 import { useForm, useFieldArray, useWatch } from "react-hook-form";
-import { emptyUser } from "../utils/userSchema";
+import { emptyUser } from "../app/utils/userSchema";
 
 export default function Home() {
 	const [screen, setScreen] = useState(0);

@@ -29,7 +29,7 @@ export default function Home() {
 	});
 	
 	const submitForm = (data) => {
-		console.log(data);
+		console.log(data, "submitted!!");
 	}	
 
 	console.log(errors, "errors object");

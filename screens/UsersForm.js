@@ -7,7 +7,7 @@ import {
 	faCircleXmark,
 	faClose,
 	faTriangleExclamation,
-} from "@fortawesome/free-solid-svg-icons";
+} from "@fortawesome/free-solid-svg-icons";		
 import { emptyUser } from "../utils/userSchema";
 import { useFieldArray, Controller } from "react-hook-form";
 
@@ -16,6 +16,7 @@ const hourWithMinutesRegex = /[/+-\-](([01]?[0-2])|(12)):(([0-5][0-9])|59)$/; //
 const hoursTwoDigitsRegex = /[/+-\-](([01]?[0-2])|(12))$/; //10, 11, 12
 const hourSingleDigitRegex = /[\+-\-]\d$/; // 2, 5, 9
 const validCharRegex = /[0-9|:|\+|\-]/;
+const globalTimezoneRegex = /[/+-\-](\d$)|[/+-\-](([01]?[0-2])|(12))$|[/+-\-](([01]?[0-2])|(12)):(([0-5][0-9])|59)$/; 
 
 export default React.memo(function UsersForm({
 	registerField,
@@ -95,7 +96,7 @@ const User = function ({
 		deleteUser(userIndex);
 	};
 
-	const validateTimezoneInput = (e) => {
+	const validTimezoneCharacter = (e) => {
 		{
 			//TODO: CODE REVIEW
 		}
@@ -103,16 +104,26 @@ const User = function ({
 		const lastChar = currentText.charAt(currentText.length - 1);
 
 		// First checks if the new character is valid
-		// Second makes sure that the user is not trying to delete a character from the prefix
+		if ( lastChar.match(validCharRegex) ){
+			return true;
+		} else if (currentText === timezonePrefix) {
+			//!git  We're catching the event when user has added a valid character to the input field, but wants to delete it: "GMT+" to "GMT"
+			//! we need this because backspace (key fired when deleting) doesn't come inside of the event that we receive in this function
+			//! When user presses backspaces, currentText passes from "GMT+" to "GMT", this is why the comparison gives true
+			return true;
+		}
+		return false;
+	};
+	const validateTimezoneInput = (value) => {
 		if (
-			lastChar.match(validCharRegex) ||
-			currentText.substring(0, timezonePrefix.length) === timezonePrefix
+			value.match(hourWithMinutesRegex) ||
+			value.match(hoursTwoDigitsRegex) ||
+			value.match(hourSingleDigitRegex)
 		) {
 			return true;
 		}
-
 		return false;
-	};
+	}
 	return (
 		<>
 			<div className="tagline">Add a Friend</div>
@@ -173,7 +184,8 @@ const User = function ({
 								autoComplete="off"
 								value={field.value}
 								onChange={(e) => {
-									if (validateTimezoneInput(e)) {
+									if (validTimezoneCharacter(e)) {
+										console.log("valid character")
 										field.onChange(e);
 									}
 								}}
@@ -194,6 +206,7 @@ const User = function ({
 								value: 9,
 								message: "Invalid timezone",
 							},
+							validate: value => validateTimezoneInput(value) || "Invalid Timezone Format",
 							required: "this must be filled",
 						}}
 					/>

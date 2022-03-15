@@ -13,11 +13,10 @@ import { useFieldArray, Controller } from "react-hook-form";
 
 const timezonePrefix = "GMT";
 const hoursTwoDigitsWithMinutesRegex = /[/+-\-](([01]?[0-2])|(12)):(([0-5][0-9])|59)$/; // 10:30
-const hourSingleDigitWithMinutes = /([\+-\-]\d):(([0-5][0-9])|59)/; // 9:30
+const hourSingleDigitWithMinutes = /([\+-\-]\d):(([0-5][0-9])|59)$/; // 9:30
 const hoursTwoDigitsRegex = /[/+-\-](([01]?[0-2])|(12))$/; //10, 11, 12
 const hourSingleDigitRegex = /[\+-\-]\d$/; // 2, 5, 9
 const validCharRegex = /[0-9|:|\+|\-]/;
-const globalTimezoneRegex = /[/+-\-](\d$)|[/+-\-](([01]?[0-2])|(12))$|[/+-\-](([01]?[0-2])|(12)):(([0-5][0-9])|59)$/; 
 
 export default React.memo(function UsersForm({
 	registerField,

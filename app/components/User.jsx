@@ -164,33 +164,45 @@ const User = function ({
 				<NestedUserSchedulesArray
 					nestIndex={userMapIndex}
 					upperFieldArrayName={fieldArrayName}
-					{...{ control, registerField }}
+					{...{ control, registerField, errors }}
 				/>
 			</div>
 		</>
 	);
 };
-
-const NestedUserSchedulesArray = React.memo(function ({
+//TODO: Make a func to validate if errors object has changed
+const NestedUserSchedulesArray = function ({
 	nestIndex,
 	upperFieldArrayName,
 	control,
-	registerField,
+	registerField,  
+    errors
 }) {
 	const { fields, append, remove } = useFieldArray({
 		control,
 		name: `${upperFieldArrayName}.${nestIndex}.preferedSchedule`,
 	});
-	// const [wantsToAddSchedules, setWantsToAddSchedules] = useState(false);
+	
 
 	const handleAddSchedule = () => {
-		// setWantsToAddSchedules(true);
 		append({
 			min: "",
 			max: "",
 		});
 	};
-	console.log(fields, "fields schedules");
+    const validateTime = (time, fieldIndex) => {
+        // if min is less than max return true;
+        // if max is more than min return true;
+        // if user is adding start and End is empty return true;
+        // if user is adding End and Start is empty return true;
+
+        console.log(fields, "prefered schedule");
+        return true;
+    }
+    
+	// console.log(fields, "fields schedules");
+    // console.log(errors, "errors from nested");
+
 	return (
 		<>
 			{fields.map((scheduleField, fieldIndex) => {
@@ -199,6 +211,9 @@ const NestedUserSchedulesArray = React.memo(function ({
 						className="schedule-container"
 						key={scheduleField.id}
 					>
+                        {errors?.[upperFieldArrayName]?.[nestIndex]?.preferedSchedule?.[fieldIndex]?.min?.message && (
+                            <FontAwesomeIcon icon={faTriangleExclamation} className="danger-icon"/>
+                        )}
 						<Controller
 							control={control}
 							name={`${upperFieldArrayName}.${nestIndex}.preferedSchedule.${fieldIndex}.min`}
@@ -206,16 +221,26 @@ const NestedUserSchedulesArray = React.memo(function ({
 								<DatePicker
 									placeholderText={"Start"}
 									selected={field.value}
-									onChange={(date) => field.onChange(date)}
+									onChange={(time) => {
+                                        field.onChange(time);
+                                    }}
 									showTimeSelect
 									showTimeSelectOnly
 									timeIntervals={60}
 									timeCaption="Time"
 									dateFormat="h:mm aa"
+									onBlur={field.onBlur}
 								/>
 							)}
+                            rules={{
+                                required: "required"
+                            }}
 						/>
 						<span className="text-separator">to</span>
+						{errors?.[upperFieldArrayName]?.[nestIndex]?.preferedSchedule?.[fieldIndex]?.max?.message && (
+							<FontAwesomeIcon icon={faTriangleExclamation} className="danger-icon"/>
+                        )}
+                        
 						<Controller
 							control={control}
 							name={`${upperFieldArrayName}.${nestIndex}.preferedSchedule.${fieldIndex}.max`}
@@ -224,7 +249,9 @@ const NestedUserSchedulesArray = React.memo(function ({
 									className="end-time-picker"
 									placeholderText={"End"}
 									selected={field.value}
-									onChange={(date) => field.onChange(date)}
+									onChange={(time) => {
+                                        field.onChange(time);
+                                    }}
 									showTimeSelect
 									showTimeSelectOnly
 									timeIntervals={60}
@@ -232,6 +259,9 @@ const NestedUserSchedulesArray = React.memo(function ({
 									dateFormat="h:mm aa"
 								/>
 							)}
+                            rules={{
+                                required: "required"
+                            }}
 						/>
 						<button
 							className="close-button"
@@ -256,6 +286,6 @@ const NestedUserSchedulesArray = React.memo(function ({
 			</button>
 		</>
 	);
-});
+}
 
-export default User;
+export default User;    

@@ -44,6 +44,11 @@ const StyledDatePickers = styled.div`
     .close-button:hover {
         color: var(--black);
     }
+    .danger-icon {
+		color: var(--orange-pale);
+		margin-right: 5px;
+        align-self: center;
+    }
 `;
 
 export default StyledDatePickers;

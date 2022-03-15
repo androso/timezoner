@@ -12,7 +12,8 @@ import { emptyUser } from "../utils/userSchema";
 import { useFieldArray, Controller } from "react-hook-form";
 
 const timezonePrefix = "GMT";
-const hourWithMinutesRegex = /[/+-\-](([01]?[0-2])|(12)):(([0-5][0-9])|59)$/; // 10:30, 2:15
+const hoursTwoDigitsWithMinutesRegex = /[/+-\-](([01]?[0-2])|(12)):(([0-5][0-9])|59)$/; // 10:30
+const hourSingleDigitWithMinutes = /([\+-\-]\d):(([0-5][0-9])|59)/; // 9:30
 const hoursTwoDigitsRegex = /[/+-\-](([01]?[0-2])|(12))$/; //10, 11, 12
 const hourSingleDigitRegex = /[\+-\-]\d$/; // 2, 5, 9
 const validCharRegex = /[0-9|:|\+|\-]/;
@@ -115,10 +116,12 @@ const User = function ({
 		return false;
 	};
 	const validateTimezoneInput = (value) => {
+
 		if (
-			value.match(hourWithMinutesRegex) ||
+			value.match(hoursTwoDigitsWithMinutesRegex) ||
 			value.match(hoursTwoDigitsRegex) ||
-			value.match(hourSingleDigitRegex)
+			value.match(hourSingleDigitRegex) ||
+			value.match(hourSingleDigitWithMinutes)
 		) {
 			return true;
 		}

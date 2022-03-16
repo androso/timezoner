@@ -9,7 +9,7 @@ import {
 	faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";		
 import { useFieldArray, Controller } from "react-hook-form";
-
+import { getRangeBetweenHours } from "../utils/utils";
 
 // REGEXS FOR VALIDATION
 const timezonePrefix = "GMT";
@@ -199,24 +199,69 @@ const NestedUserSchedulesArray = function ({
 		
 	};
     const validateTime = (val, fieldIndex) => {
-		const minTime = controlledFields[fieldIndex].min !== "" ? controlledFields[fieldIndex].min.getHours() : null;
-		const maxTime = controlledFields[fieldIndex].max !== "" ? controlledFields[fieldIndex].max.getHours() : null;
+		const minHour = controlledFields[fieldIndex].min !== "" ? controlledFields[fieldIndex].min.getHours() : null;
+		const maxHour = controlledFields[fieldIndex].max !== "" ? controlledFields[fieldIndex].max.getHours() : null;
 		// TODO we need to find a way to check that this schedule is not being interrupted by outside schedules
 		//! we could map over controlled fields, then extract a range of hours (min to max) compare it to our current range of hours
 		//! and see if they collide somehow, but how do we know if they collide? 
 
-		if (minTime !== null && maxTime !== null) {
-			if (minTime < maxTime) {
-				return true;
+		if (minHour !== null && maxHour !== null) {
+			if (minHour > maxHour) {
+				return false;
 			}
-		} else if (minTime !== null || maxTime !== null) {
-			return true;
+		} else if (minHour == null || maxHour == null) {
+			return false;
 		}
+		// get array of numbers between two numbers
+		// const currentHoursRange = getRangeBetweenHours(minHour, maxHour);
+		// // console.log(currentHoursRange, "current hour range");
+
+		// const collisions = controlledFields.filter((scheduleField, index) => {
+		// 	const externalHourRange = getRangeBetweenHours(scheduleField.min.getHours(), scheduleField.max.getHours());
+		// 	console.log(scheduleField, "field")
+		// 	console.log(externalHourRange, currentHoursRange, "ranges");
+			
+		// 	//! Here we're comparing smth like this
+		// 	//! currRange = [9, 10, 11, 12, 13, 14]
+		// 	//! extRange = [10, 12]
+		// 	//! if any of the hours in currRange is in extRang we want to return true here
+		// 	//TODO make it so that from the first time it encounters a collision it returns false to the upper function
+		// 	const smallCollisions = currentHoursRange.some(hour => externalHourRange.indexOf(hour) >= 0);
+		// 	if (smallCollisions.length > 0) {
+		// 		return true;
+		// 	}
+		// }) 
+
+		// let collisionsExists = false;
+		
+		// controlledFields.every((scheduleField) => {
+		// 	// console.log(scheduleField, "mapping each schedule");
+		// 	const externalHourRange = getRangeBetweenHours(scheduleField.min.getHours(), scheduleField.max.getHours());
+		// 	console.log({
+		// 		internal: currentHoursRange,
+		// 		external: externalHourRange
+		// 	});
+
+		// 	const smallCollisions = currentHoursRange.some(hour => externalHourRange.indexOf(hour) >= 0);
+		// 	if (smallCollisions.length > 0) {
+		// 		collisionsExists = true;
+		// 		return false;
+		// 	}
+		// 	return true;
+		// })
+
+		// if (collisionsExists) {
+		// 	return false;
+		// }
+		// if (collisions.length > 0)  {
+		// 	console.log(collisions);
+		// 	return false;
+		// }
 		// console.log("inside validation time", {
 		// 	min: minTime,
-		// 	max: maxTime
+		// 	max: maxHour
 		// })
-        return false;
+        return true;
     }
     // console.log(controlledFields, 'controlled fieldsos'); 
 	// console.log(fields, "fields schedules");
@@ -233,7 +278,11 @@ const NestedUserSchedulesArray = function ({
 						key={scheduleField.id}
 					>
                         {errors?.[upperFieldArrayName]?.[nestIndex]?.preferedSchedule?.[fieldIndex]?.min?.message && (
-                            <FontAwesomeIcon icon={faTriangleExclamation} className="danger-icon"/>
+                            <FontAwesomeIcon 
+								icon={faTriangleExclamation} 
+								className="danger-icon"
+								title={errors?.[upperFieldArrayName]?.[nestIndex]?.preferedSchedule?.[fieldIndex]?.max?.message}
+							/>
                         )}
 						<Controller
 							control={control}
@@ -261,7 +310,11 @@ const NestedUserSchedulesArray = function ({
 						/>
 						<span className="text-separator">to</span>
 						{errors?.[upperFieldArrayName]?.[nestIndex]?.preferedSchedule?.[fieldIndex]?.max?.message && (
-							<FontAwesomeIcon icon={faTriangleExclamation} className="danger-icon"/>
+							<FontAwesomeIcon 
+								icon={faTriangleExclamation} 
+								className="danger-icon"
+								title={errors?.[upperFieldArrayName]?.[nestIndex]?.preferedSchedule?.[fieldIndex]?.max?.message}
+							/>
                         )}
 						<Controller
 							control={control}
@@ -284,7 +337,8 @@ const NestedUserSchedulesArray = function ({
 								/>
 							)}
                             rules={{
-                                required: "required"
+                                required: "required",
+								validate: (val) => validateTime(val, fieldIndex) || "Invalid Time"
                             }}
 						/>
 						<button

@@ -7,13 +7,14 @@ import {
 	faCircleXmark,
 	faClose,
 	faTriangleExclamation,
-} from "@fortawesome/free-solid-svg-icons";		
+} from "@fortawesome/free-solid-svg-icons";
 import { useFieldArray, Controller } from "react-hook-form";
 import { getRangeBetweenHours, arraysAreEqual } from "../utils/utils";
 
 // REGEXS FOR VALIDATION
 const timezonePrefix = "GMT";
-const hoursTwoDigitsWithMinutesRegex = /[/+-\-](([01]?[0-2])|(12)):(([0-5][0-9])|59)$/; // 10:30
+const hoursTwoDigitsWithMinutesRegex =
+	/[/+-\-](([01]?[0-2])|(12)):(([0-5][0-9])|59)$/; // 10:30
 const hourSingleDigitWithMinutes = /([\+-\-]\d):(([0-5][0-9])|59)$/; // 9:30
 const hoursTwoDigitsRegex = /[/+-\-](([01]?[0-2])|(12))$/; //10, 11, 12
 const hourSingleDigitRegex = /[\+-\-]\d$/; // 2, 5, 9
@@ -28,7 +29,7 @@ const User = function ({
 	currentUser,
 	control,
 	errors,
-	watch
+	watch,
 }) {
 	const [wantsToAddSchedules, setWantsToAddSchedules] = useState(false);
 	const handleDeleteUser = (userIndex) => {
@@ -175,19 +176,21 @@ const NestedUserSchedulesArray = function ({
 	nestIndex,
 	upperFieldArrayName,
 	control,
-	registerField,  
-    errors,
-	watch
+	registerField,
+	errors,
+	watch,
 }) {
 	const { fields, append, remove } = useFieldArray({
 		control,
 		name: `${upperFieldArrayName}.${nestIndex}.preferedSchedule`,
 	});
-	const watchFieldArray = watch(`${upperFieldArrayName}.${nestIndex}.preferedSchedule`);
+	const watchFieldArray = watch(
+		`${upperFieldArrayName}.${nestIndex}.preferedSchedule`
+	);
 	const controlledFields = fields.map((field, index) => {
 		return {
-		...field,
-		...watchFieldArray[index]
+			...field,
+			...watchFieldArray[index],
 		};
 	});
 
@@ -196,14 +199,102 @@ const NestedUserSchedulesArray = function ({
 			min: "",
 			max: "",
 		});
-		
 	};
+
+	//! We should have one func to valildate one input box inside one field
+	//! this one will be fired on each onChange of user
+	//! We want to check that the time received is not in any other timeField, else we throw an error
+	//! and another func to validate all timeFields
+	//! This one will be used when user submits the form
+	//! will loop over every scheduleField, checking if there's any collision
+
+	const validateHours = (val, fieldIndex) => {
+		console.log("validating")
+		const minHour =
+			controlledFields[fieldIndex].min !== ""
+				? controlledFields[fieldIndex].min.getHours()
+				: null;
+		const maxHour =
+			controlledFields[fieldIndex].max !== ""
+				? controlledFields[fieldIndex].max.getHours()
+				: null;
+
+		if (minHour !== null && maxHour !== null) {
+			console.log("do we fire this before submitting? dinamically")
+			if (minHour > maxHour) {
+				return false;
+			}
+
+			const currentHoursRange = getRangeBetweenHours(minHour, maxHour);
+			let collisionsExists = false;
+			controlledFields.every((scheduleField, index) => {
+				if (scheduleField.min === "" || scheduleField.max === "") {
+					return true; //skip
+				}
+				const externalHoursRange = getRangeBetweenHours(
+					scheduleField.min.getHours(),
+					scheduleField.max.getHours()
+				);
+				if (arraysAreEqual(currentHoursRange, externalHoursRange)) {
+					// if we're iterating over the current field
+					return true; //skip
+				}
+				const smallCollisions = currentHoursRange.some(
+					(hour) => externalHoursRange.indexOf(hour) >= 0
+				);
+				
+				if (smallCollisions) {
+					// console.log(
+					// 	currentHoursRange,
+					// 	externalHoursRange,
+					// 	"collision between these two"
+					// );
+					collisionsExists = true;
+					return false;
+				}
+				// console.log("no collision here");
+				return true;
+			});
+
+			if (collisionsExists) {
+				return false;
+			}
+		} else if (minHour !== null || maxHour !== null) {
+			const existingHour = ( minHour !== null ? minHour : maxHour);
+
+			let collisionsExists = false;
+
+			// we use .every so that we can exit the first time we find a collision and don't waste machine power
+			controlledFields.every((scheduleField) => {
+				if (scheduleField.min === "" || scheduleField.max === "") {
+					return true; //skip because user has not filled this time field
+				}
+				const externalHoursRange = getRangeBetweenHours(
+					scheduleField.min.getHours(),
+					scheduleField.max.getHours()
+				);
+				const collision = externalHoursRange.indexOf(existingHour);
+				if (collision >= 0) {
+					console.log(
+						currentHoursRange,
+						externalHoursRange,
+						"collision between these two"
+					);
+					collisionsExists = true;
+					return false;
+				}
+				if (collisionsExists) {
+					return false; // we break off the loop
+				}
+			})
+		}
+		return true;
+	};
+
+	/*
     const validateTime = (val, fieldIndex) => {
 		const minHour = controlledFields[fieldIndex].min !== "" ? controlledFields[fieldIndex].min.getHours() : null;
 		const maxHour = controlledFields[fieldIndex].max !== "" ? controlledFields[fieldIndex].max.getHours() : null;
-		// TODO we need to find a way to check that this schedule is not being interrupted by outside schedules
-		//! we could map over controlled fields, then extract a range of hours (min to max) compare it to our current range of hours
-		//! and see if they collide somehow, but how do we know if they collide? 
 
 		if (minHour !== null && maxHour !== null) {
 			if (minHour > maxHour) {
@@ -250,37 +341,35 @@ const NestedUserSchedulesArray = function ({
 
 
 
-
-
-
-
-
-
-
-
         return true;
     }
-    // console.log(controlledFields, 'controlled fieldsos'); 
+	*/
+
+	// console.log(controlledFields, 'controlled fieldsos');
 	// console.log(fields, "fields schedules");
-    // console.log(errors, "errors from nested");
+	// console.log(errors, "errors from nested");
 	return (
 		<>
-			{/*//TODO Fix bug: when there's text inside timezone input and you press add schedule, it acts as a submit button*/}
 			{/*//TODO Validate that min is less than max */}
-			{/*//TODO Switch over controlled inputs */}
+
 			{controlledFields.map((scheduleField, fieldIndex) => {
 				return (
 					<StyledDatePickers
 						className="schedule-container"
 						key={scheduleField.id}
 					>
-                        {errors?.[upperFieldArrayName]?.[nestIndex]?.preferedSchedule?.[fieldIndex]?.min?.message && (
-                            <FontAwesomeIcon 
-								icon={faTriangleExclamation} 
+						{errors?.[upperFieldArrayName]?.[nestIndex]?.preferedSchedule?.[
+							fieldIndex
+						]?.min?.message && (
+							<FontAwesomeIcon
+								icon={faTriangleExclamation}
 								className="danger-icon"
-								title={errors?.[upperFieldArrayName]?.[nestIndex]?.preferedSchedule?.[fieldIndex]?.min?.message}
+								title={
+									errors?.[upperFieldArrayName]?.[nestIndex]
+										?.preferedSchedule?.[fieldIndex]?.min?.message
+								}
 							/>
-                        )}
+						)}
 						<Controller
 							control={control}
 							name={`${upperFieldArrayName}.${nestIndex}.preferedSchedule.${fieldIndex}.min`}
@@ -291,7 +380,7 @@ const NestedUserSchedulesArray = function ({
 									onChange={(time) => {
 										field.onChange(time);
 										field.onBlur();
-                                    }}
+									}}
 									showTimeSelect
 									showTimeSelectOnly
 									timeIntervals={60}
@@ -300,19 +389,29 @@ const NestedUserSchedulesArray = function ({
 									{...field}
 								/>
 							)}
-                            rules={{
-                                required: "required",
-								validate: (val) => validateTime(val, fieldIndex) || "There's a collision between the schedules"
-                            }}
+							rules={{
+								required: "required",
+								// validate: (val) =>
+								// 	validateHours(val, fieldIndex) ||
+								// 	"There's a collision between the schedules"
+								validate: {
+									
+								}
+							}}
 						/>
 						<span className="text-separator">to</span>
-						{errors?.[upperFieldArrayName]?.[nestIndex]?.preferedSchedule?.[fieldIndex]?.max?.message && (
-							<FontAwesomeIcon 
-								icon={faTriangleExclamation} 
+						{errors?.[upperFieldArrayName]?.[nestIndex]?.preferedSchedule?.[
+							fieldIndex
+						]?.max?.message && (
+							<FontAwesomeIcon
+								icon={faTriangleExclamation}
 								className="danger-icon"
-								title={errors?.[upperFieldArrayName]?.[nestIndex]?.preferedSchedule?.[fieldIndex]?.max?.message}
+								title={
+									errors?.[upperFieldArrayName]?.[nestIndex]
+										?.preferedSchedule?.[fieldIndex]?.max?.message
+								}
 							/>
-                        )}
+						)}
 						<Controller
 							control={control}
 							name={`${upperFieldArrayName}.${nestIndex}.preferedSchedule.${fieldIndex}.max`}
@@ -322,9 +421,9 @@ const NestedUserSchedulesArray = function ({
 									placeholderText={"End"}
 									selected={field.value}
 									onChange={(time) => {
-                                        field.onChange(time);
+										field.onChange(time);
 										field.onBlur();
-                                    }}
+									}}
 									showTimeSelect
 									showTimeSelectOnly
 									timeIntervals={60}
@@ -333,10 +432,12 @@ const NestedUserSchedulesArray = function ({
 									{...field}
 								/>
 							)}
-                            rules={{
-                                required: "required"
-								
-                            }}
+							rules={{
+								required: "required",
+								// validate: (val) =>
+								// 	validateHours(val, fieldIndex) ||
+								// 	"There's a collision between the schedules"
+							}}
 						/>
 						<button
 							className="close-button"
@@ -361,6 +462,6 @@ const NestedUserSchedulesArray = function ({
 			</button>
 		</>
 	);
-}
+};
 
-export default User;    
+export default User;

@@ -32,7 +32,7 @@ export default function Home() {
 		console.log(data, "submitted!!");
 	}	
 
-console.log(errors, "errors object");
+	// console.log(errors, "errors object");
 	// console.log(watch("usersForms"), "fields");
 	return (
 		<div className="container">

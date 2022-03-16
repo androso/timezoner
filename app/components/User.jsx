@@ -128,7 +128,7 @@ const User = function ({
 										field.onChange(e);
 									}
 								}}
-								onClick={(e) => {
+								onFocus={(e) => {
 									if (field.value === "") {
 										field.onChange(timezonePrefix);
 									}
@@ -207,7 +207,7 @@ const NestedUserSchedulesArray = function ({
 	return (
 		<>
 			{/*//TODO Fix bug: when there's text inside timezone input and you press add schedule, it acts as a submit button*/}
-			{/*//TODO Fix bug: when you have two prefered schedules filled but you delete the second one, it is the first one that gets deleted, this might be bc of keys*/}
+			{/*//TODO Fixing bug: when tab between inputs, timezone input wasn't getting filled with Timezone prefix*/}
 			{fields.map((scheduleField, fieldIndex) => {
 				return (
 					<StyledDatePickers

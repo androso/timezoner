@@ -213,15 +213,18 @@ const NestedUserSchedulesArray = function ({
 			return false;
 		}
 
-
+		console.log(minHour, maxHour);
 
 
 
 
 		const currentHoursRange = getRangeBetweenHours(minHour, maxHour);
 		let collisionsExists = false;
-		console.log(controlledFields);
 		controlledFields.every((scheduleField, index) => {
+			
+			if (scheduleField.min === '' || scheduleField.max === '') {
+				return true;
+			}
 			const externalHoursRange = getRangeBetweenHours(scheduleField.min.getHours(), scheduleField.max.getHours());
 			if (arraysAreEqual(currentHoursRange, externalHoursRange)) {
 				// console.log(currentHoursRange, externalHoursRange, "arrays are equal")

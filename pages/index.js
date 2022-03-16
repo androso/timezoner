@@ -47,7 +47,7 @@ export default function Home() {
 						deleteUser={remove}
 						users={fields}
 						fieldArrayName="usersForms"
-						{...{ control, errors, handleSubmit, submitForm}}
+						{...{ control, errors, handleSubmit, submitForm, watch}}
 					/>
 				) : screen === 1 ? (
 					<Timezones />

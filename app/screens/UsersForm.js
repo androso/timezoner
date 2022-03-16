@@ -23,6 +23,7 @@ export default React.memo(function UsersForm({
 	errors,
 	handleSubmit,
 	submitForm,
+	watch
 }) {
 	const handleAddUser = () => {
 		addUser(emptyUser);
@@ -48,6 +49,7 @@ export default React.memo(function UsersForm({
 									users,
 									control,
 									errors,
+									watch
 								}}
 							/>
 						);

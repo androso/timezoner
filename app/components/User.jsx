@@ -28,6 +28,7 @@ const User = function ({
 	currentUser,
 	control,
 	errors,
+	watch
 }) {
 	const [wantsToAddSchedules, setWantsToAddSchedules] = useState(false);
 	const handleDeleteUser = (userIndex) => {
@@ -163,7 +164,7 @@ const User = function ({
 				<NestedUserSchedulesArray
 					nestIndex={userMapIndex}
 					upperFieldArrayName={fieldArrayName}
-					{...{ control, registerField, errors }}
+					{...{ control, registerField, errors, watch }}
 				/>
 			</div>
 		</>
@@ -175,38 +176,57 @@ const NestedUserSchedulesArray = function ({
 	upperFieldArrayName,
 	control,
 	registerField,  
-    errors
+    errors,
+	watch
 }) {
 	const { fields, append, remove } = useFieldArray({
 		control,
 		name: `${upperFieldArrayName}.${nestIndex}.preferedSchedule`,
 	});
-	
+	const watchFieldArray = watch(`${upperFieldArrayName}.${nestIndex}.preferedSchedule`);
+	const controlledFields = fields.map((field, index) => {
+		return {
+		...field,
+		...watchFieldArray[index]
+		};
+	});
 
 	const handleAddSchedule = () => {
 		append({
 			min: "",
 			max: "",
 		});
-		console.log(fields);
+		
 	};
-    const validateTime = (time, fieldIndex) => {
-        // if min is less than max return true;
-        // if max is more than min return true;
-        // if user is adding start and End is empty return true;
-        // if user is adding End and Start is empty return true;
+    const validateTime = (val, fieldIndex) => {
+		const minTime = controlledFields[fieldIndex].min !== "" ? controlledFields[fieldIndex].min.getHours() : null;
+		const maxTime = controlledFields[fieldIndex].max !== "" ? controlledFields[fieldIndex].max.getHours() : null;
+		// TODO we need to find a way to check that this schedule is not being interrupted by outside schedules
+		//! we could map over controlled fields, then extract a range of hours (min to max) compare it to our current range of hours
+		//! and see if they collide somehow, but how do we know if they collide? 
 
-        console.log(fields, "prefered schedule");
-        return true;
+		if (minTime !== null && maxTime !== null) {
+			if (minTime < maxTime) {
+				return true;
+			}
+		} else if (minTime !== null || maxTime !== null) {
+			return true;
+		}
+		// console.log("inside validation time", {
+		// 	min: minTime,
+		// 	max: maxTime
+		// })
+        return false;
     }
-    
+    // console.log(controlledFields, 'controlled fieldsos'); 
 	// console.log(fields, "fields schedules");
     // console.log(errors, "errors from nested");
 	return (
 		<>
 			{/*//TODO Fix bug: when there's text inside timezone input and you press add schedule, it acts as a submit button*/}
 			{/*//TODO Validate that min is less than max */}
-			{fields.map((scheduleField, fieldIndex) => {
+			{/*//TODO Switch over controlled inputs */}
+			{controlledFields.map((scheduleField, fieldIndex) => {
 				return (
 					<StyledDatePickers
 						className="schedule-container"
@@ -223,7 +243,7 @@ const NestedUserSchedulesArray = function ({
 									placeholderText={"Start"}
 									selected={field.value}
 									onChange={(time) => {
-                                        field.onChange(time);
+										field.onChange(time);
 										field.onBlur();
                                     }}
 									showTimeSelect
@@ -235,7 +255,8 @@ const NestedUserSchedulesArray = function ({
 								/>
 							)}
                             rules={{
-                                required: "required"
+                                required: "required",
+								validate: (val) => validateTime(val, fieldIndex) || "Invalid Time"
                             }}
 						/>
 						<span className="text-separator">to</span>

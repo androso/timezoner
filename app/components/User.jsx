@@ -189,6 +189,7 @@ const NestedUserSchedulesArray = function ({
 			min: "",
 			max: "",
 		});
+		console.log(fields);
 	};
     const validateTime = (time, fieldIndex) => {
         // if min is less than max return true;
@@ -205,6 +206,8 @@ const NestedUserSchedulesArray = function ({
 
 	return (
 		<>
+			{/*//TODO Fix bug: when there's text inside timezone input and you press add schedule, it acts as a submit button*/}
+			{/*//TODO Fix bug: when you have two prefered schedules filled but you delete the second one, it is the first one that gets deleted, this might be bc of keys*/}
 			{fields.map((scheduleField, fieldIndex) => {
 				return (
 					<StyledDatePickers
@@ -223,6 +226,7 @@ const NestedUserSchedulesArray = function ({
 									selected={field.value}
 									onChange={(time) => {
                                         field.onChange(time);
+										field.onBlur();
                                     }}
 									showTimeSelect
 									showTimeSelectOnly
@@ -240,7 +244,6 @@ const NestedUserSchedulesArray = function ({
 						{errors?.[upperFieldArrayName]?.[nestIndex]?.preferedSchedule?.[fieldIndex]?.max?.message && (
 							<FontAwesomeIcon icon={faTriangleExclamation} className="danger-icon"/>
                         )}
-                        
 						<Controller
 							control={control}
 							name={`${upperFieldArrayName}.${nestIndex}.preferedSchedule.${fieldIndex}.max`}
@@ -251,12 +254,14 @@ const NestedUserSchedulesArray = function ({
 									selected={field.value}
 									onChange={(time) => {
                                         field.onChange(time);
+										field.onBlur();
                                     }}
 									showTimeSelect
 									showTimeSelectOnly
 									timeIntervals={60}
 									timeCaption="Time"
 									dateFormat="h:mm aa"
+									onBlur={field.onBlur}
 								/>
 							)}
                             rules={{
@@ -267,7 +272,7 @@ const NestedUserSchedulesArray = function ({
 							className="close-button"
 							type="button"
 							onClick={() => {
-								remove(scheduleField.id);
+								remove(fieldIndex);
 							}}
 						>
 							<FontAwesomeIcon icon={faCircleXmark} />

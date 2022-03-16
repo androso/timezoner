@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyledDatePickers } from "../styles";
 import DatePicker from "react-datepicker";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -124,7 +124,6 @@ const User = function ({
 								value={field.value}
 								onChange={(e) => {
 									if (validTimezoneCharacter(e)) {
-										console.log("valid character");
 										field.onChange(e);
 									}
 								}}
@@ -203,11 +202,10 @@ const NestedUserSchedulesArray = function ({
     
 	// console.log(fields, "fields schedules");
     // console.log(errors, "errors from nested");
-
 	return (
 		<>
 			{/*//TODO Fix bug: when there's text inside timezone input and you press add schedule, it acts as a submit button*/}
-			{/*//TODO Fixing bug: when tab between inputs, timezone input wasn't getting filled with Timezone prefix*/}
+			{/*//TODO Validate that min is less than max */}
 			{fields.map((scheduleField, fieldIndex) => {
 				return (
 					<StyledDatePickers
@@ -233,7 +231,7 @@ const NestedUserSchedulesArray = function ({
 									timeIntervals={60}
 									timeCaption="Time"
 									dateFormat="h:mm aa"
-									onBlur={field.onBlur}
+									{...field}
 								/>
 							)}
                             rules={{
@@ -261,7 +259,7 @@ const NestedUserSchedulesArray = function ({
 									timeIntervals={60}
 									timeCaption="Time"
 									dateFormat="h:mm aa"
-									onBlur={field.onBlur}
+									{...field}
 								/>
 							)}
                             rules={{

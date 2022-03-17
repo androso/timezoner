@@ -7,8 +7,10 @@ import styled from "styled-components";
 import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import { emptyUser } from "../app/utils/userSchema";
 import { useLocalStorage } from "../app/hooks";
+import { useRouter } from 'next/router'
 
 export default function Home() {
+	const router = useRouter()
 	const [screen, setScreen] = useState(0);
 	const [submittedForm, setSubmittedForm] = useLocalStorage("user-form", null);
 	
@@ -32,30 +34,24 @@ export default function Home() {
 	
 	const submitForm = (data) => {
 		setSubmittedForm(data.usersForms);
-		setScreen((prevScreen) => prevScreen + 1);
+		router.push('/timezones', undefined, {shallow: true}); 
 	}	
 
 	
 	return (
 		<div className="container">
-			<GlobalStyle />
+			
 			<HeadData />
 
 			<main className="main">
-				{screen === 0 ? (
-					<UsersForm
-						registerField={register}
-						addUser={append}
-						deleteUser={remove}
-						users={fields}
-						fieldArrayName="usersForms"
-						{...{ control, errors, handleSubmit, submitForm, watch}}
-					/>
-				) : screen === 1 ? (
-					<Timezones {...{submittedForm}}/>
-				) : (
-					""
-				)}
+				<UsersForm
+					registerField={register}
+					addUser={append}
+					deleteUser={remove}
+					users={fields}
+					fieldArrayName="usersForms"
+					{...{ control, errors, handleSubmit, submitForm, watch}}
+				/>
 			</main>
 
 			<StyledFooter>

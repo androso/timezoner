@@ -201,15 +201,8 @@ const NestedUserSchedulesArray = function ({
 		});
 	};
 
-	//! We should have one func to valildate one input box inside one field
-	//! this one will be fired on each onChange of user
-	//! We want to check that the time received is not in any other timeField, else we throw an error
-	//! and another func to validate all timeFields
-	//! This one will be used when user submits the form
-	//! will loop over every scheduleField, checking if there's any collision
-
-	const validateHours = (val, fieldIndex) => {
-		console.log("validating")
+	const validSchedule = (val, fieldIndex) => {
+	
 		const minHour =
 			controlledFields[fieldIndex].min !== ""
 				? controlledFields[fieldIndex].min.getHours()
@@ -220,7 +213,7 @@ const NestedUserSchedulesArray = function ({
 				: null;
 
 		if (minHour !== null && maxHour !== null) {
-			console.log("do we fire this before submitting? dinamically")
+			
 			if (minHour > maxHour) {
 				return false;
 			}
@@ -287,63 +280,32 @@ const NestedUserSchedulesArray = function ({
 					return false; // we break off the loop
 				}
 			})
+
 		}
 		return true;
 	};
 
-	/*
-    const validateTime = (val, fieldIndex) => {
-		const minHour = controlledFields[fieldIndex].min !== "" ? controlledFields[fieldIndex].min.getHours() : null;
-		const maxHour = controlledFields[fieldIndex].max !== "" ? controlledFields[fieldIndex].max.getHours() : null;
+	const validHourRange = (val, fieldIndex) => {
+		const minHour =
+			controlledFields[fieldIndex].min !== ""
+				? controlledFields[fieldIndex].min.getHours()
+				: null;
+		const maxHour =
+			controlledFields[fieldIndex].max !== ""
+				? controlledFields[fieldIndex].max.getHours()
+				: null;
 
 		if (minHour !== null && maxHour !== null) {
 			if (minHour > maxHour) {
 				return false;
 			}
-		} else if (minHour == null || maxHour == null) {
-			return false;
-		}
-
-		console.log(minHour, maxHour);
-
-
-
-
-		const currentHoursRange = getRangeBetweenHours(minHour, maxHour);
-		let collisionsExists = false;
-		controlledFields.every((scheduleField, index) => {
-			
-			if (scheduleField.min === '' || scheduleField.max === '') {
-				return true;
-			}
-			const externalHoursRange = getRangeBetweenHours(scheduleField.min.getHours(), scheduleField.max.getHours());
-			if (arraysAreEqual(currentHoursRange, externalHoursRange)) {
-				// console.log(currentHoursRange, externalHoursRange, "arrays are equal")
-				return true; //skip
-			}
-			const smallCollisions = currentHoursRange.some(hour => externalHoursRange.indexOf(hour) >= 0);
-			// console.log(smallCollisions);
-			if (smallCollisions) {
-				console.log(currentHoursRange, externalHoursRange, "collision between these two");
-				collisionsExists = true;
-				return false;
-			}
-			console.log("no collision here")
+		} else if (minHour !== null || maxHour !== null) {
 			return true;
-		})
-
-		if (collisionsExists) {
-			return false;
 		}
-		
 
-
-
-
-
-        return true;
-    }
-	*/
+		return true;
+	}
+	
 
 	// console.log(controlledFields, 'controlled fieldsos');
 	// console.log(fields, "fields schedules");
@@ -391,11 +353,9 @@ const NestedUserSchedulesArray = function ({
 							)}
 							rules={{
 								required: "required",
-								// validate: (val) =>
-								// 	validateHours(val, fieldIndex) ||
-								// 	"There's a collision between the schedules"
 								validate: {
-									
+									hourRange: (val) => validHourRange(val, fieldIndex) || "Invalid Hour Range",
+									scheduleCollision: (val) => validSchedule(val, fieldIndex) || "There are collisions between schedules"
 								}
 							}}
 						/>
@@ -434,9 +394,10 @@ const NestedUserSchedulesArray = function ({
 							)}
 							rules={{
 								required: "required",
-								// validate: (val) =>
-								// 	validateHours(val, fieldIndex) ||
-								// 	"There's a collision between the schedules"
+								validate: {
+									hourRange: (val) => validHourRange(val, fieldIndex) || "Invalid Hour Range",
+									scheduleCollision: (val) => validSchedule(val, fieldIndex) || "There are collisions between schedules"
+								}
 							}}
 						/>
 						<button

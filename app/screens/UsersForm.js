@@ -1,15 +1,12 @@
 import React, { useState } from "react";
-import { StyledUserForm, StyledDatePickers } from "../styles";
+import { StyledUserForm } from "../styles";
 import DatePicker from "react-datepicker";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faPlus,
-	faCircleXmark,
-	faClose,
-	faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";		
 import { emptyUser } from "../utils/userSchema";
-import { useFieldArray, Controller } from "react-hook-form";
+
 import { User} from "../components"
 
 

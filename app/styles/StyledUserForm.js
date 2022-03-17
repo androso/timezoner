@@ -2,6 +2,7 @@ import styled from "styled-components";
 const StyledUserForm = styled.form`
 	text-align: center;
 	.title {
+		/* font-size: 2.5rem; */
 		margin-bottom: 50px;
 	}
 	.form-container {

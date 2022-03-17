@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyledDatePickers } from "../styles";
+import { StyledDatePickers, StyledUser } from "../styles";
 import DatePicker from "react-datepicker";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -68,7 +68,8 @@ const User = function ({
 	return (
 		<>
 			<div className="tagline">Add a Friend</div>
-			<div className="user-container">
+
+			<StyledUser className="user-container">
 				{users.length > 1 && (
 					<button
 						className="close-user"
@@ -167,7 +168,7 @@ const User = function ({
 					upperFieldArrayName={fieldArrayName}
 					{...{ control, registerField, errors, watch }}
 				/>
-			</div>
+			</StyledUser>
 		</>
 	);
 };
@@ -306,10 +307,6 @@ const NestedUserSchedulesArray = function ({
 		return true;
 	}
 	
-
-	// console.log(controlledFields, 'controlled fieldsos');
-	// console.log(fields, "fields schedules");
-	// console.log(errors, "errors from nested");
 	return (
 		<>
 			{/*//TODO Validate that min is less than max */}
@@ -325,7 +322,7 @@ const NestedUserSchedulesArray = function ({
 						]?.min?.message && (
 							<FontAwesomeIcon
 								icon={faTriangleExclamation}
-								className="danger-icon"
+								className="danger-icon single"
 								title={
 									errors?.[upperFieldArrayName]?.[nestIndex]
 										?.preferedSchedule?.[fieldIndex]?.min?.message
@@ -365,7 +362,7 @@ const NestedUserSchedulesArray = function ({
 						]?.max?.message && (
 							<FontAwesomeIcon
 								icon={faTriangleExclamation}
-								className="danger-icon"
+								className="danger-icon single"
 								title={
 									errors?.[upperFieldArrayName]?.[nestIndex]
 										?.preferedSchedule?.[fieldIndex]?.max?.message

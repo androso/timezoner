@@ -54,7 +54,6 @@ export default function Home() {
 				) : (
 					""
 				)}
-				{/* <p>{watch()}</p>  */}
 			</main>
 
 			<StyledFooter>

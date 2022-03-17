@@ -60,13 +60,14 @@ export default React.memo(function UsersForm({
 							className="cta start"
 							title="Start conversion"
 							onClick={handleSubmit(submitForm)}
+							type="submit"
 						>
 							START
 						</button>
 						<button
 							className="cta add-user"
 							title="Add new friend"
-							type="submit"
+							type="button"
 							onClick={handleAddUser}
 						>
 							<FontAwesomeIcon icon={faPlus} className="add-icon" />

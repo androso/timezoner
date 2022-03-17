@@ -30,13 +30,18 @@ export const isPrefered = (preferedSchedule, hourDigit) => {
 	// Will return an array of classNames
 	return preferedSchedule
 		.map((schedule) => {
-			if (hourDigit >= schedule.min && hourDigit <= schedule.max) {
+			const minHour = new Date(schedule.min).getHours();
+			const maxHour = new Date(schedule.max).getHours();
+
+			if (hourDigit >= minHour && hourDigit <= maxHour) {
 				return "highlighted";
 			}
 			return "";
 		})
 		.join("");
 }
+
+
 export const standardizeHours = (user) => {
 	// The standard that we conver to is GMT 0
 	const hoursOffset = parseFloat(user.gmt);

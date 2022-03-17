@@ -4,6 +4,7 @@ const variables = css`
 	:root {
 		--green-strong: #6b705c;
 		--green-pale: #beccbc;
+		--highlighted-cell: #71886D;
 		--black-pale: #454545;
 		--black-dark: #1d1d1d;
 		--black-pale: #333;

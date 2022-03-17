@@ -6,15 +6,17 @@ import { GlobalStyle } from "../app/styles";
 import styled from "styled-components";
 import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import { emptyUser } from "../app/utils/userSchema";
+import { useLocalStorage } from "../app/hooks";
 
 export default function Home() {
 	const [screen, setScreen] = useState(0);
+	const [submittedForm, setSubmittedForm] = useLocalStorage("user-form", null);
+	
 	const {
 		register,
 		control,
 		watch,
 		handleSubmit,
-		getValues, 
 		formState: { errors },
 	} = useForm({
 		defaultValues: {
@@ -29,11 +31,11 @@ export default function Home() {
 	});
 	
 	const submitForm = (data) => {
-		console.log(data, "submitted!!");
+		setSubmittedForm(data.usersForms);
+		setScreen((prevScreen) => prevScreen + 1);
 	}	
 
-	// console.log(errors, "errors object");
-	// console.log(watch("usersForms"), "fields");
+	
 	return (
 		<div className="container">
 			<GlobalStyle />
@@ -50,7 +52,7 @@ export default function Home() {
 						{...{ control, errors, handleSubmit, submitForm, watch}}
 					/>
 				) : screen === 1 ? (
-					<Timezones />
+					<Timezones {...{submittedForm}}/>
 				) : (
 					""
 				)}

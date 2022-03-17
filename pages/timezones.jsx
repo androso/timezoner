@@ -6,24 +6,43 @@ import {
 	standardizeHours,
 	getHoursConverted,
 	getFormattedHour,
+	defaultHours
 } from "../app/utils/utils";
 
 export default function timezones() {
-	const [submittedForm, setSubmittedForm] = useState(null);
 	const router = useRouter();
+	const [submittedForm, setSubmittedForm] = useState(null);
+	const [users, setUsers] = useState(null);
+	const [userOfReference, setUserOfReference] = useState(null);
+	const [hoursConverted, setHoursConverted] = useState(null);
 
 	useEffect(() => {
-		const form = window.localStorage.getItem("user-form");
-		if (form) {
-			setSubmittedForm(JSON.parse(form));
+		const jsonForm = window.localStorage.getItem("user-form");
+		const parsedForm = JSON.parse(jsonForm);
+
+		if (parsedForm) {
+			setSubmittedForm(parsedForm);
 		} else {
 			router.push("/", undefined, { shallow: true });
 		}
+
+		const initialUsers = parsedForm.map((user, index) => {
+			if (index === 0) {
+				const newUser = { ...user };
+				newUser.defaultHours = defaultHours;
+				newUser.standardizedHours = standardizeHours(newUser);
+				newUser.gmt = user.gmt.substring(3);
+				return newUser;
+			}
+			return user;
+		});
+		
+		setUsers(initialUsers);
+		setUserOfReference(initialUsers[0]);
+
 	}, []);
 
-	useEffect(() => {
-		console.log(submittedForm);
-	}, [submittedForm]);
+	
 
 	return (
 		<>
@@ -36,7 +55,7 @@ export default function timezones() {
 						</div>
 					</div>
 					<div className="bf-table-responsive">
-						<TimeTable />
+						{/* <TimeTable /> */}
 					</div>
 				</StyledTimezone>
 			) : (

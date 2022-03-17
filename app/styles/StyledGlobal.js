@@ -33,9 +33,6 @@ const GlobalStyle = createGlobalStyle`
         justify-content: flex-start;
         align-items: center;
     }
-
-
-
 `;
 
 export default GlobalStyle;

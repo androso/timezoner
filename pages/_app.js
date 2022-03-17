@@ -1,4 +1,4 @@
-import '../app/styles/globals.css'
+// import '../app/styles/globals.css'
 import 'react-datepicker/dist/react-datepicker.css';
 import { GlobalStyle } from "../app/styles";
 function MyApp({ Component, pageProps }) {

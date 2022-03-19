@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { StyledDatePickers, StyledUserCard } from "../styles";
+import React from "react";
+import { StyledDatePickers } from "../styles";
 import DatePicker from "react-datepicker";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 	faPlus,
 	faCircleXmark,
-	faClose,
 	faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
 import { useFieldArray, Controller } from "react-hook-form";
-import { validSchedule, validHourRange } from "../utils/utils";
 
 export default function UsersSchedules(props) {
 	const {
@@ -164,3 +162,108 @@ const handleAddSchedule = (append) => {
 		max: "",
 	});
 };
+
+const validSchedule = (val, fieldIndex, controlledFields) => {
+	
+	const minHour =
+		controlledFields[fieldIndex].min !== ""
+			? controlledFields[fieldIndex].min.getHours()
+			: null;
+	const maxHour =
+		controlledFields[fieldIndex].max !== ""
+			? controlledFields[fieldIndex].max.getHours()
+			: null;
+
+	if (minHour !== null && maxHour !== null) {
+		
+		if (minHour > maxHour) {
+			return false;
+		}
+
+		const currentHoursRange = getRangeBetweenHours(minHour, maxHour);
+		let collisionsExists = false;
+		controlledFields.every((scheduleField, index) => {
+			if (scheduleField.min === "" || scheduleField.max === "") {
+				return true; //skip
+			}
+			const externalHoursRange = getRangeBetweenHours(
+				scheduleField.min.getHours(),
+				scheduleField.max.getHours()
+			);
+			if (arraysAreEqual(currentHoursRange, externalHoursRange)) {
+				// if we're iterating over the current field
+				return true; //skip
+			}
+			const smallCollisions = currentHoursRange.some(
+				(hour) => externalHoursRange.indexOf(hour) >= 0
+			);
+			
+			if (smallCollisions) {
+				// console.log(
+				// 	currentHoursRange,
+				// 	externalHoursRange,
+				// 	"collision between these two"
+				// );
+				collisionsExists = true;
+				return false;
+			}
+			// console.log("no collision here");
+			return true;
+		});
+
+		if (collisionsExists) {
+			return false;
+		}
+	} else if (minHour !== null || maxHour !== null) {
+		const existingHour = ( minHour !== null ? minHour : maxHour);
+
+		let collisionsExists = false;
+
+		// we use .every so that we can exit the first time we find a collision and don't waste machine power
+		controlledFields.every((scheduleField) => {
+			if (scheduleField.min === "" || scheduleField.max === "") {
+				return true; //skip because user has not filled this time field
+			}
+			const externalHoursRange = getRangeBetweenHours(
+				scheduleField.min.getHours(),
+				scheduleField.max.getHours()
+			);
+			const collision = externalHoursRange.indexOf(existingHour);
+			if (collision >= 0) {
+				console.log(
+					currentHoursRange,
+					externalHoursRange,
+					"collision between these two"
+				);
+				collisionsExists = true;
+				return false;
+			}
+			if (collisionsExists) {
+				return false; // we break off the loop
+			}
+		})
+
+	}
+	return true;
+};
+
+const validHourRange = (val, fieldIndex, controlledFields) => {
+	const minHour =
+		controlledFields[fieldIndex].min !== ""
+			? controlledFields[fieldIndex].min.getHours()
+			: null;
+	const maxHour =
+		controlledFields[fieldIndex].max !== ""
+			? controlledFields[fieldIndex].max.getHours()
+			: null;
+
+	if (minHour !== null && maxHour !== null) {
+		if (minHour > maxHour) {
+			return false;
+		}
+	} else if (minHour !== null || maxHour !== null) {
+		return true;
+	}
+
+	return true;
+}

@@ -17,13 +17,9 @@ const StyledUserForm = styled.form`
 	}
 
 	.tagline,
-	.user-container,
-	.user-container input,
 	.cta {
 		box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 	}
-
-
 	.tagline {
 		background-color: var(--green-strong);
 		position: absolute;
@@ -65,21 +61,7 @@ const StyledUserForm = styled.form`
 		position: absolute;
 		right: 0;
 	}
-	.cta.add-schedule {
-		padding: 5px 15px;
-		align-self: flex-start;
-		font-weight: 500;
-	}
-	.close-user {
-		position: absolute;
-		cursor: pointer;
-		right: 10px;
-		top: 5px;
-		font-size: 1.4rem;
-		background-color: transparent !important;
-		border: none;
-		color: var(--black-pale);
-	}
+	
 	
 `;
 

@@ -31,7 +31,9 @@ const UserCard = function ({
 
 	return (
 		<>
-			<div className="tagline">Add a Friend</div>
+			<div className="tagline">
+				<p>Add a Friend</p>
+			</div>
 
 			<StyledUserCard className="user-container">
 				{users.length > 1 && (
@@ -39,7 +41,7 @@ const UserCard = function ({
 						className="close-user"
 						type="button"
 						onClick={() => {
-							handleDeleteUser(() => deleteUser(userMapIndex));
+							deleteUser(userMapIndex)
 						}}
 					>
 						<FontAwesomeIcon icon={faClose} className="close-user-icon" />

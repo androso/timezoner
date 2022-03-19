@@ -15,7 +15,6 @@ const StyledDatePickers = styled.div`
         align-self: center;
         
     }
-
     input, .text-separator {
         margin-right: 10px;
     }
@@ -24,12 +23,6 @@ const StyledDatePickers = styled.div`
     }
     .react-datepicker-wrapper {
         width: initial;
-    }
-    .react-datepicker__header {
-
-    }
-    .react-datepicker__time-container .react-datepicker__time {
-
     }
     .close-button {
 		cursor: pointer;

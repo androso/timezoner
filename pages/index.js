@@ -41,7 +41,7 @@ export default function Home() {
 	return (
 		<div className="container">
 			
-			<HeadData />
+			{/* <HeadData /> */}
 
 			<main className="main">
 				<UsersForm

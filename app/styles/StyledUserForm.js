@@ -22,9 +22,7 @@ const StyledUserForm = styled.form`
 	.cta {
 		box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 	}
-	.close-user svg {
-		filter: drop-shadow(0px 4px 4px rgba(0 0 0 / 0.45));
-	}
+
 
 	.tagline {
 		background-color: var(--green-strong);
@@ -35,47 +33,7 @@ const StyledUserForm = styled.form`
 		color: #fafafa;
 		font-weight: 500;
 	}
-	.user-container {
-		display: flex;
-		flex-direction: column;
-		background-color: var(--green-strong);
-		min-width: 90%;
-		min-height: 178px;
-		border-radius: 10px;
-		padding: 39px 27px;
-		margin-bottom: 20px;
-		position: relative;
-	}
-	.user-container input {
-		width: 100%;
-		background-color: var(--black-pale);
-		border-radius: 6px;
-		border: none;
-		padding: 10px 12px;
-		color: var(--white);
-		font-size: 1rem;
-	}
-	.user-container .input-container {
-		margin-bottom: 9px;
-		text-align: left;
-	}
-	.user-container input::placeholder {
-		color: #cecece;
-	}
-	.user-container input:focus {
-		outline: none;
-	}
-	.user-container .input-container .error-message {
-		color: var(--yellow);
-		font-weight: 500;
-		margin-top: 5px;
-		font-size:.9rem;
-	}
-	.user-container .input-container .danger-icon {
-		color: var(--orange-pale);
-		margin-right: 5px;
-		max-height: .9rem;
-	}
+
 	.cta {
 		background-color: var(--black-dark);
 		color: var(--white);

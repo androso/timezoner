@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyledDatePickers, StyledUser } from "../styles";
+import { StyledDatePickers, StyledUserCard } from "../styles";
 import DatePicker from "react-datepicker";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -69,7 +69,7 @@ const User = function ({
 		<>
 			<div className="tagline">Add a Friend</div>
 
-			<StyledUser className="user-container">
+			<StyledUserCard className="user-container">
 				{users.length > 1 && (
 					<button
 						className="close-user"
@@ -168,7 +168,7 @@ const User = function ({
 					upperFieldArrayName={fieldArrayName}
 					{...{ control, registerField, errors, watch }}
 				/>
-			</StyledUser>
+			</StyledUserCard>
 		</>
 	);
 };

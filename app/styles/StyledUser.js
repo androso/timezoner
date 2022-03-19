@@ -7,8 +7,8 @@ const StyledUser = styled.div`
     }
     .danger-icon.single:hover {
         background-color: #555;
-
     }
+    color: red;
 `;
 
 export default StyledUser;

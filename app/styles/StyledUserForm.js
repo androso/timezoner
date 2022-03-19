@@ -74,6 +74,7 @@ const StyledUserForm = styled.form`
 	.user-container .input-container .danger-icon {
 		color: var(--orange-pale);
 		margin-right: 5px;
+		max-height: .9rem;
 	}
 	.cta {
 		background-color: var(--black-dark);

@@ -78,7 +78,7 @@ const User = function ({
 							handleDeleteUser(userMapIndex);
 						}}
 					>
-						<FontAwesomeIcon icon={faClose} />
+						<FontAwesomeIcon icon={faClose} className="close-user-icon" />
 					</button>
 				)}
 				<div className="input-container">

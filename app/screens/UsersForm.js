@@ -1,14 +1,9 @@
 import React, { useState } from "react";
 import { StyledUserForm } from "../styles";
-import DatePicker from "react-datepicker";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-	faPlus,
-} from "@fortawesome/free-solid-svg-icons";		
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { emptyUser } from "../utils/userSchema";
-
-import { User} from "../components"
-
+import {  UserCard } from "../components";
 
 export default React.memo(function UsersForm({
 	registerField,
@@ -20,7 +15,7 @@ export default React.memo(function UsersForm({
 	errors,
 	handleSubmit,
 	submitForm,
-	watch
+	watch,
 }) {
 	const handleAddUser = () => {
 		addUser(emptyUser);
@@ -35,7 +30,7 @@ export default React.memo(function UsersForm({
 				<div className="form-container">
 					{users.map((item, index) => {
 						return (
-							<User
+							<UserCard
 								key={item.id}
 								userMapIndex={index}
 								currentUser={item}
@@ -46,7 +41,7 @@ export default React.memo(function UsersForm({
 									users,
 									control,
 									errors,
-									watch
+									watch,
 								}}
 							/>
 						);
@@ -75,6 +70,3 @@ export default React.memo(function UsersForm({
 		</>
 	);
 });
-
-
-

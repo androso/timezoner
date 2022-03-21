@@ -2,6 +2,7 @@ import Document, {Html ,Head, Main, NextScript } from 'next/document';
 // Import styled components ServerStyleSheet
 import { ServerStyleSheet } from 'styled-components';
 import { HeadData } from '../app/components';
+import Script from "next/script";
 export default class MyDocument extends Document {
   static getInitialProps({ renderPage }) {
     // Step 1: Create an instance of ServerStyleSheet
@@ -25,7 +26,6 @@ export default class MyDocument extends Document {
         <Head>
           {/* Step 5: Output the styles in the head  */}
           {this.props.styleTags}
-          <HeadData />
         </Head>
         <body>
           <Main />

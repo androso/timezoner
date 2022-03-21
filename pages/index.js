@@ -37,7 +37,9 @@ export default function Home() {
 		router.push('/timezones', undefined, {shallow: true}); 
 	}	
 
-	
+	useEffect(() => {
+		console.log(process.env.NEXT_PUBLIC_GA_ID)
+	}, [])
 	return (
 		<div className="container">
 			

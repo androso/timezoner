@@ -26,6 +26,7 @@ export default class MyDocument extends Document {
         <Head>
           {/* Step 5: Output the styles in the head  */}
           {this.props.styleTags}
+          <meta name="description" content="Web tool that makes easier scheduling events with your friends from all around the world" />
         </Head>
         <body>
           <Main />

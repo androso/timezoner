@@ -1,8 +1,5 @@
-import { useState, useEffect } from "react";
-import Select from "react-select";
-import { HeadData } from "../app/components";
+import { useState } from "react";
 import { UsersForm, Timezones } from "../app/screens";
-import { GlobalStyle } from "../app/styles";
 import styled from "styled-components";
 import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import { emptyUser } from "../app/utils/userSchema";

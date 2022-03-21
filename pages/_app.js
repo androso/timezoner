@@ -9,6 +9,7 @@ function MyApp({ Component, pageProps }) {
     <>
       <Head>
         <title>Timezoner</title>
+        
       </Head>
       <Script
           strategy="lazyOnload"

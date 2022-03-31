@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { UsersForm, Timezones } from "../app/screens";
+import { UsersForm } from "../app/screens";
 import styled from "styled-components";
 import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import { emptyUser } from "../app/utils/userSchema";
